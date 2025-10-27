@@ -1,4 +1,5 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
+# TravelOut
+TravelOut este un joc strategic cu cărți pentru 2 jucători, în care călătorești prin Europa cu autobuzul, trenul sau avionul pentru a obține cele mai multe puncte. Jucătorii folosesc cărți pentru a se deplasa între țări, pentru a colecta puncte și de acțiune, care îi ajută pe ei sau le pun piedici adversarilor. Jocul se încheie atunci când un jucător a vizitat cinci țări, moment în care jucătorul cu cel mai mare număr de puncte câștigă.
 
 ### Folosiți template-ul corespunzător grupei voastre!
 
