@@ -1,0 +1,44 @@
+Albania,Tara vulturilor,5,2
+Andorra,Principatul din Pirinei,3,1
+Austria,Tara muzicii clasice,7,3
+Belarus,Alcoolul se bea ca apa,4,2
+Belgia,Tara ciocolatei,6,2
+Bosnia si Hertegovina,Inima Balcanilor,4,2
+Bulgaria,Tara trandafirilor,5,2
+Cehia,Tara berii,6,2
+Cipru,Insula Afroditei,5,2
+Croatia,Coasta celor o mie de insule,7,3
+Danemarca,Tara vikingilor,7,3
+Elvetia,Tara Alpilor,8,4
+Estonia,Tara digitala,6,2
+Finlanda,Tara celor o mie de lacuri,7,3
+Franta,Tara vinurilor,10,3
+Germania,Tara poetilor si ganditorilor,9,3
+Grecia,Leaganul civilizatiei,8,2
+Irlanda,Insula de smarald,7,3
+Islanda,Tara de gheata si foc,8,4
+Italia,Tara pastelor,10,2
+Letonia,Coasta de chihlimbar,5,2
+Liechtenstein,Micul principat,4,2
+Lituania,Tara berzei albe,5,2
+Luxemburg,Marele Ducat,6,2
+Macedonia de Nord,Perla Balcanilor,4,2
+Malta,Insula cavalerilor,5,2
+Marea Britanie,Regatul Unit,9,3
+Moldova,Tara vinului,4,1
+Monaco,Bijuteria Mediteranei,5,3
+Muntenegru,Perla ascunsa a Adriaticii,5,2
+Norvegia,Tara fiordurilor,8,4
+Olanda,Tara lalelelor,7,2
+Polonia,Inima Europei,7,2
+Portugalia,Tara navigatorilor,7,3
+Romania,Gradina Carpatilor,6,2
+San Marino,Cea mai veche republica,3,1
+Serbia,Rascrucea Europei,5,2
+Slovacia,Inima verde a Europei,6,2
+Slovenia,Tara pesterilor,6,2
+Spania,Tara soarelui,10,3
+Suedia,Tara celor trei coroane,8,3
+Ucraina,Granarul Europei,6,2
+Ungaria,Perla Dunarii,6,2
+Vatican,Statul Papal,3,1
