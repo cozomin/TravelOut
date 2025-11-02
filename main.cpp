@@ -79,9 +79,9 @@ class Bilet: public Carte {
 private:
     TipBilet tip_bilet;
     int range;
+    static const std::map<TipBilet, int> nr_aparitii_teanc;
 
 public:
-    static const std::map<TipBilet, int> nr_aparitii_teanc;
 
     Bilet() : Carte("Bilet", "Un bilet de calatorie", 2), tip_bilet(TipBilet::Autobuz), range(1){}
     Bilet(const std::string& t, const std::string& d, const TipBilet tip, const int p = 0)
@@ -114,6 +114,10 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Bilet& b) {
         b.afisare(os);
         return os;
+    }
+
+    static std::map<TipBilet, int> get_nr_aparitii_teanc() {
+        return nr_aparitii_teanc;
     }
 
 };
@@ -249,7 +253,7 @@ private:
         populeazaTariFisier("Tari.txt");
 
         // Adauga biletele pe baza configuratiei statice
-        for (const auto& pair : Bilet::nr_aparitii_teanc) {
+        for (const auto& pair : Bilet::get_nr_aparitii_teanc()) {
             const TipBilet tip = pair.first;
             const int numar = pair.second;
             std::string nume, desc;
