@@ -234,13 +234,10 @@ private:
 
             costStr = linie.substr(pos1);
 
-            try {
-                const int puncte = std::stoi(puncteStr);
-                const int cost = std::stoi(costStr);
-                carti.push_back(new Tara(nume, descriere, puncte, cost));
-            } catch (const std::exception& e) {
-                std::cerr << "[EROARE] Date invalide (puncte/cost) pentru: " << nume << '\n';
-            }
+            const int puncte = std::stoi(puncteStr);
+            const int cost = std::stoi(costStr);
+            carti.push_back(new Tara(nume, descriere, puncte, cost));
+
         }
 
         fin.close();
