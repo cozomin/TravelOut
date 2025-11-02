@@ -116,7 +116,7 @@ public:
         return os;
     }
 
-    static std::map<TipBilet, int> get_nr_aparitii_teanc() {
+    static const std::map<TipBilet, int>& get_nr_aparitii_teanc() {
         return nr_aparitii_teanc;
     }
 
