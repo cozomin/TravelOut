@@ -28,7 +28,7 @@ public:
 
     virtual Carte* clone() const = 0;
 
-    std::string getTitlu() const { return titlu;}
+    const std::string& getTitlu() const { return titlu;}
     int getPuncte() const { return puncte;}
 
     friend std::ostream& operator<<(std::ostream& os, const Carte & c) {
@@ -67,8 +67,8 @@ public:
     }
 
     void setDetinuta(const bool d) { detinuta = d; }
-    // bool esteDetinuta() const { return detinuta;}
-    // int getCostCalatorie() const { return cost_calatorie;}
+    // bool esteDetinuta() const { return detinuta; }
+    // int getCostCalatorie() const { return cost_calatorie; }
 
 };
 
@@ -194,8 +194,8 @@ public:
         if(e.carti.empty())
             os << " (Nicio carte in etalare)\n";
 
-        for(const auto& carte : e.carti)
-            os << " - "<<*carte << '\n';
+        for(const Carte* carte : e.carti)
+            os << " - " << *carte << '\n';
 
         return os;
     }
@@ -511,7 +511,7 @@ public:
         std::cout << etalare << '\n';
     }
 
-    std::string getNume() const { return nume; }
+    const std::string& getNume() const { return nume; }
     int getPuncteEtalare() const { return etalare.getPuncte(); }
     int getTariEtalare() const { return etalare.getNrTari(); }
     int getNrCartiMana() const { return nr_cartiMana; }
@@ -523,8 +523,8 @@ public:
         if(j.cartiMana.empty())
             os << "  (Nicio carte in mana)\n";
         int index = 1;
-        for(const auto& carte : j.cartiMana)
-            os << " - "<<"["<<index++<<"] "<<*carte << '\n';
+        for(const Carte* carte : j.cartiMana)
+            os << " - " << "[" << index++ << "] " << *carte << '\n';
         os << j.etalare << '\n';
         return os;
     }
