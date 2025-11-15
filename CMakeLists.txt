@@ -50,7 +50,23 @@ include(cmake/CopyHelper.cmake)
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
+    sources/Carte.cpp
+    sources/Tara.cpp
+    sources/Bilet.cpp
+    sources/Etalare.cpp
+    sources/Teanc.cpp
+    sources/Jucator.cpp
+    sources/Joc.cpp
+    headers/Carte.hpp
+    headers/Tara.hpp
+    headers/Bilet.hpp
+    headers/Etalare.hpp
+    headers/Teanc.hpp
+    headers/Jucator.hpp
+    headers/Joc.hpp
 )
+
+target_include_directories(${MAIN_EXECUTABLE_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/headers")
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
 # NOTE: RUN_SANITIZERS is optional, if it's not present it will default to true
@@ -80,11 +96,3 @@ copy_files(FILES tastatura.txt COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE
 copy_files(FILES Tari.txt COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(FILES tastatura.txt config.json DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
-
-include(FetchContent)
-FetchContent_Declare(
-        tinyxml2
-        GIT_REPOSITORY https://github.com/leethomason/tinyxml2.git
-        GIT_TAG v10.0.0 # or the version you require
-)
-FetchContent_MakeAvailable(tinyxml2)
