@@ -3,19 +3,22 @@
 
 #include "Carte.hpp"
 #include <string>
+#include <memory>
 
 class Tara : public Carte {
 private:
-    int cost_calatorie;
     bool detinuta;
+    std::string cod;
 
 public:
     Tara();
-    Tara(const std::string& t, const std::string& d, int p, int cost);
+    Tara(const std::string& t, const std::string& d, int p, const std::string&);
 
-    Carte* clone() const override;
+    std::unique_ptr<Carte> clone() const override;
 
     void afisare(std::ostream& os) const override;
+
+    std::string getCod() const;
 
     void setDetinuta(bool d);
 };

@@ -2,6 +2,7 @@
 #define CARTE_HPP
 #include <string>
 #include <iostream>
+#include <memory>
 
 class Carte {
 
@@ -18,7 +19,7 @@ public:
 
     virtual void afisare(std::ostream& os) const ;
 
-    virtual Carte* clone() const = 0;
+    virtual std::unique_ptr<Carte> clone() const = 0;
 
     const std::string& getTitlu() const;
     int getPuncte() const;

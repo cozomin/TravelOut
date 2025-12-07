@@ -4,30 +4,26 @@
 #include "Carte.hpp"
 #include "Bilet.hpp"
 #include <vector>
+#include <string>
+#include <memory>
 
 class Etalare {
 private:
-    std::vector<Carte*> carti;
+    std::vector<std::unique_ptr<Carte>> carti;
+    std::pair<std::string,std::string> nume_cod_tara_curenta;
     int nr_tari;
     int nr_puncte;
 
-    void elibereazaMemorie();
-    void DeepCopy(const Etalare& other);
-
 public:
-    Etalare();
-    Etalare(const int nr_tari, const int nr_puncte);
-    ~Etalare();
+    Etalare() : nr_tari(0), nr_puncte(0) {}
+    Etalare(int nr_tari, int nr_puncte);
 
-    Etalare(const Etalare& other);
-    Etalare& operator=(const Etalare& other);
-
-    void adaugaCarte(Carte* carteNoua);
-    void adaugaTara(const std::string& nume, const std::string& desc, int puncte, int cost);
-    void adaugaBilet(const std::string& nume, const std::string& desc, TipBilet tip, int puncte);
+    void adaugaCarte(std::unique_ptr<Carte> carteNoua);
 
     int getPuncte() const;
     int getNrTari() const;
+    std::string getNumeTaraCurenta();
+    std::string getCodTaraCurenta() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Etalare& e);
 };

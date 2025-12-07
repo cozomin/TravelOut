@@ -1,26 +1,35 @@
 #include "Teanc.hpp"
 #include "Bilet.hpp"
 #include "Tara.hpp"
+#include "ActiuneTrageCarti.hpp"
+#include "ActiuneDecarteazaIntoarceAlege.hpp"
+#include "ActiuneSchimbaCarti.hpp"
+#include "Exceptii.hpp"
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 #include <random>
 #include <chrono>
+#include <utility>
 
 void Teanc::populeazaTariFisier(const std::string& numeFisier) {
     std::ifstream fin(numeFisier);
     if (!fin.is_open()) {
-        std::cerr << "[EROARE] Nu s-a putut deschide fisierul " << numeFisier << '\n';
-        return;
+        // Aruncam exceptie daca fisierul nu poate fi deschis
+        throw InitializareJocExceptie("Nu s-a putut deschide fisierul " + numeFisier);
     }
 
     std::string linie;
     while (std::getline(fin, linie)) {
-        std::string nume, descriere, puncteStr, costStr;
+        std::string nume, cod, descriere, puncteStr, costStr;
         size_t pos1 = 0, pos2 = 0;
 
         pos2 = linie.find(',', pos1);
         nume = linie.substr(pos1, pos2 - pos1);
+        pos1 = pos2 + 1;
+
+        pos2 = linie.find(',', pos1);
+        cod = linie.substr(pos1, pos2 - pos1);
         pos1 = pos2 + 1;
 
         pos2 = linie.find(',', pos1);
@@ -29,13 +38,10 @@ void Teanc::populeazaTariFisier(const std::string& numeFisier) {
 
         pos2 = linie.find(',', pos1);
         puncteStr = linie.substr(pos1, pos2 - pos1);
-        pos1 = pos2 + 1;
-
-        costStr = linie.substr(pos1);
 
         const int puncte = std::stoi(puncteStr);
-        const int cost = std::stoi(costStr);
-        carti.push_back(new Tara(nume, descriere, puncte, cost));
+
+        carti.push_back(std::make_unique<Tara>(nume, descriere, puncte, cod));
     }
 
     fin.close();
@@ -64,11 +70,16 @@ void Teanc::populeazaTeanc() {
                 break;
         }
         for (int i = 0; i < numar; i++) {
-            carti.push_back(new Bilet(nume, desc, tip));
+            carti.push_back(std::make_unique<Bilet>(nume, desc, tip));
         }
     }
 
-    nr_carti = static_cast<int>(carti.size());
+    for (int i = 0; i < nr_aparitii_actiune; i++) {
+        carti.push_back(std::make_unique<ActiuneTrageCarti>("ATM", 3, 0));
+        carti.push_back(std::make_unique<ActiuneTrageCarti>("Viata de hostel", 2, 1));
+        carti.push_back(std::make_unique<ActiuneSchimbaCarti>("O noua viata", "Decarteaza un numar de carti si trage tot atatea la schimb."));
+        carti.push_back(std::make_unique<ActiuneDecarteazaIntoarceAlege>("Croaziera", "Decarteaza toate cartile intoarse. Intoarce altele noi si ia una dintre ele", 0));
+    }
 }
 
 void Teanc::amestecaTeanc() {
@@ -77,64 +88,43 @@ void Teanc::amestecaTeanc() {
     std::cout << "[Info] Teancul principal a fost amestecat.\n";
 }
 
-void Teanc::elibereazaMemorie() {
-    for (const auto carte : carti) {
-        delete carte;
-    }
-    carti.clear();
-    nr_carti = 0;
-}
-
-void Teanc::DeepCopy(const Teanc& other) {
-    this->nr_carti = other.nr_carti;
-    for (const Carte* c : other.carti) {
-        this->carti.push_back(c->clone());
-    }
-}
-
-Teanc::Teanc() : nr_carti(0) {}
-
-Teanc::Teanc(const int nr_carti) : nr_carti(nr_carti) {}
-
-Teanc::~Teanc() {
-    elibereazaMemorie();
-}
-
-Teanc::Teanc(const Teanc& other) : nr_carti(other.nr_carti) {
-    DeepCopy(other);
-}
-
-Teanc& Teanc::operator=(const Teanc& other) {
-    if (this == &other)
-        return *this;
-
-    elibereazaMemorie();
-    DeepCopy(other);
-    return *this;
-}
-
-void Teanc::adaugaCarte(Carte* carteNoua) {
+void Teanc::adaugaCarte(std::unique_ptr<Carte> carteNoua) {
     if (carteNoua == nullptr) return;
-    carti.push_back(carteNoua);
-    nr_carti++;
+    carti.push_back(std::move(carteNoua));
 }
 
-Carte* Teanc::trageCarte() {
-    if (carti.empty()) return nullptr;
-    Carte* carteTrasa = carti.back();
-    carti.pop_back();
-    nr_carti--;
+std::unique_ptr<Carte> Teanc::trageCarte(const unsigned long long index) {
+    if (carti.empty()) {
+        throw PachetGolExceptie("Nu se poate trage o carte dintr-un pachet gol.");
+    }
+    if (index >= carti.size()) {
+        throw ActiuneInvalidaExceptie("Indexul specificat pentru tragerea cartii este in afara limitelor.");
+    }
+
+    std::unique_ptr<Carte> carteTrasa = std::move(carti.at(index));
+    carti.erase(carti.begin() + index);
     return carteTrasa;
 }
 
+Carte* Teanc::vizualizareCarte(const unsigned long long index) const {
+    if (index >= carti.size()) return nullptr;
+    return carti.at(index).get();
+}
+
 void Teanc::initializeazaTeancPrincipal() {
-    elibereazaMemorie();
+    carti.clear();
     populeazaTeanc();
     amestecaTeanc();
 }
 
+unsigned long long Teanc::getNrCarti() const {
+    return carti.size();
+}
+
 std::ostream& operator<<(std::ostream& os, const Teanc& t) {
     os << "--- Teanc ---\n";
-    os << "Numar carti in teanc: " << t.nr_carti << '\n';
+    os << "Numar carti in teanc: " << t.carti.size() << '\n';
+    for (const auto& carte : t.carti)
+        os << *carte;
     return os;
 }

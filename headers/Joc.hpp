@@ -3,30 +3,32 @@
 
 #include "Teanc.hpp"
 #include "Jucator.hpp"
+#include "Graf.hpp"
 #include <vector>
 #include <string>
 #include <ostream>
+#include <memory>
 
 class Joc {
 private:
     Teanc teancPrincipal;
     Teanc teancDecartare;
-    std::vector<Jucator> jucatori;
-    int carti_initiale_mana;
-    int turaCurenta;
-    int conditie_de_castig;
-
-    Jucator& getJucatorCurent();
+    Teanc cartiIntoarse;
+    Graf graf;
+    std::vector<std::unique_ptr<Jucator>> jucatori;
+    unsigned long long int carti_initiale_mana{};
+    int carti_initiale_intoarse{};
+    int turaCurenta{};
+    int conditie_de_castig{};
+    int bots{};
+    int humans{};
 
 public:
-    explicit Joc(const std::vector<std::string>& numeJucatori, int cim = 8, int cdc = 5);
-    ~Joc();
-    Joc(const Joc& other);
-    Joc& operator=(const Joc& other);
+    explicit Joc(const std::vector<std::string>& numeJucatori, int cim = 8, int cii = 3, int cdc = 5, int b = 2, int h = 0);
 
     void setupInitial();
     bool joacaRunda();
-    void afiseazaRezultate();
+    void afiseazaRezultate() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Joc& j);
 };

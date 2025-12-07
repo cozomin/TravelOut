@@ -1,5 +1,6 @@
 #include "Bilet.hpp"
-#include <iostream>
+#include "Graf.hpp"
+#include <memory>
 
 const std::map<TipBilet, int> Bilet::nr_aparitii_teanc = {
     {TipBilet::Autobuz, 12},
@@ -19,7 +20,7 @@ Bilet::Bilet(const std::string& t, const std::string& d, const TipBilet tip, con
             range = 2;
             break;
         case TipBilet::Avion:
-            range = 30;
+            range = Graf::getNoduri();
             break;
         default:
             range = -1;
@@ -27,8 +28,8 @@ Bilet::Bilet(const std::string& t, const std::string& d, const TipBilet tip, con
     }
 }
 
-Carte* Bilet::clone() const {
-    return new Bilet(*this);
+std::unique_ptr<Carte> Bilet::clone() const {
+    return std::make_unique<Bilet>(*this);
 }
 
 void Bilet::afisare(std::ostream& os) const {
@@ -56,4 +57,12 @@ void Bilet::afisare(std::ostream& os) const {
 
 const std::map<TipBilet, int>& Bilet::get_nr_aparitii_teanc() {
     return nr_aparitii_teanc;
+}
+
+int Bilet::getRange() const {
+    return range;
+}
+
+TipBilet Bilet::getTip() const {
+    return tip_bilet;
 }

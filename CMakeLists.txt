@@ -57,6 +57,13 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     sources/Teanc.cpp
     sources/Jucator.cpp
     sources/Joc.cpp
+    sources/Graf.cpp
+    sources/JucatorUman.cpp
+    sources/JucatorRobot.cpp
+    sources/Actiune.cpp
+    sources/ActiuneTrageCarti.cpp
+    sources/ActiuneSchimbaCarti.cpp
+    sources/ActiuneDecarteazaIntoarceAlege.cpp
     headers/Carte.hpp
     headers/Tara.hpp
     headers/Bilet.hpp
@@ -64,6 +71,14 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     headers/Teanc.hpp
     headers/Jucator.hpp
     headers/Joc.hpp
+    headers/Graf.hpp
+    headers/JucatorUman.hpp
+    headers/JucatorRobot.hpp
+    headers/Actiune.hpp
+    headers/ActiuneTrageCarti.hpp
+    headers/ActiuneSchimbaCarti.hpp
+    headers/ActiuneDecarteazaIntoarceAlege.hpp
+    headers/Exceptii.hpp
 )
 
 target_include_directories(${MAIN_EXECUTABLE_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/headers")
@@ -94,5 +109,6 @@ endif()
 
 copy_files(FILES tastatura.txt COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 copy_files(FILES Tari.txt COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
+copy_files(FILES GrafTari.txt COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(FILES tastatura.txt config.json DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})

@@ -17,11 +17,14 @@ public:
     Bilet();
     Bilet(const std::string& t, const std::string& d, TipBilet tip, int p = 0);
 
-    Carte* clone() const override;
+    std::unique_ptr<Carte> clone() const override;
 
     void afisare(std::ostream& os) const override;
 
     static const std::map<TipBilet, int>& get_nr_aparitii_teanc();
+
+    int getRange() const;
+    TipBilet getTip() const;
 };
 
 #endif //BILET_HPP

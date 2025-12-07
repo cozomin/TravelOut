@@ -3,30 +3,30 @@
 
 #include "Carte.hpp"
 #include <vector>
+#include <string>
 #include <ostream>
+#include <memory>
 
 class Teanc {
 private:
-    std::vector<Carte*> carti;
-    int nr_carti;
+    std::vector<std::unique_ptr<Carte>> carti;
+    int nr_aparitii_actiune;
 
     void populeazaTariFisier(const std::string& numeFisier);
     void populeazaTeanc();
-    void amestecaTeanc();
-    void elibereazaMemorie();
-    void DeepCopy(const Teanc& other);
 
 public:
-    Teanc();
-    explicit Teanc(int nr_carti);
-    ~Teanc();
+    explicit Teanc(const int nr_aparitii_actiune = 3) : nr_aparitii_actiune(nr_aparitii_actiune) {};
 
-    Teanc(const Teanc& other);
-    Teanc& operator=(const Teanc& other);
+    void adaugaCarte(std::unique_ptr<Carte> carteNoua);
+    std::unique_ptr<Carte> trageCarte(unsigned long long index = 0);
 
-    void adaugaCarte(Carte* carteNoua);
-    Carte* trageCarte();
+    Carte *vizualizareCarte(unsigned long long index) const;
+
     void initializeazaTeancPrincipal();
+    void amestecaTeanc();
+
+    unsigned long long getNrCarti() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Teanc& t);
 };
