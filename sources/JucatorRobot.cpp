@@ -77,17 +77,14 @@ void JucatorRobot::joacaCarte(Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
     std::unique_ptr<Bilet> biletAvionToDecard = nullptr;
 
     for (auto it = cartiMana.begin(); it != cartiMana.end(); ++it) {
-        if (Tara* currentTara = dynamic_cast<Tara*>(it->get())) {
-            bool esteCalatorieIzolata = !Graf::getNrVecini(etalare.getCodTaraCurenta()) || !Graf::getNrVecini(currentTara->getCod());
-            if (esteCalatorieIzolata) {
-                // Check if an airplane ticket exists in hand
+        if (const Tara* currentTara = dynamic_cast<const Tara*>(it->get())) {
+            if (!Graf::getNrVecini(etalare.getCodTaraCurenta()) || !Graf::getNrVecini(currentTara->getCod())) {
                 for (auto& cardInHand : cartiMana) {
-                    if (Bilet* b = dynamic_cast<Bilet*>(cardInHand.get())) {
+                    if (const Bilet* b = dynamic_cast<const Bilet*>(cardInHand.get())) {
                         if (b->getTip() == TipBilet::Avion) {
                             taraToPlayIsolated = std::unique_ptr<Tara>(static_cast<Tara*>(it->release()));
                             biletAvionToDecard = std::unique_ptr<Bilet>(static_cast<Bilet*>(cardInHand.release()));
-                            
-                            // Remove the released unique_ptrs from cartiMana
+
                             cartiMana.erase(std::remove(cartiMana.begin(), cartiMana.end(), nullptr), cartiMana.end());
                             break;
                         }
@@ -115,13 +112,13 @@ void JucatorRobot::joacaCarte(Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
     int distantaNecesara = -1;
     
     for (auto it = cartiMana.begin(); it != cartiMana.end(); ++it) {
-        if (Tara* currentTara = dynamic_cast<Tara*>(it->get())) {
+        if (const Tara* currentTara = dynamic_cast<const Tara*>(it->get())) {
             int distantaTari = Graf::distantaTari(etalare.getCodTaraCurenta(), currentTara->getCod());
             if (distantaTari != -1) {
                 int distantaDisponibila = 0;
                 for (auto& cardInHand : cartiMana) {
                     if (cardInHand.get() == currentTara) continue;
-                    if (Bilet* b = dynamic_cast<Bilet*>(cardInHand.get())) {
+                    if (const Bilet* b = dynamic_cast<const Bilet*>(cardInHand.get())) {
                         distantaDisponibila += b->getRange();
                     }
                 }
