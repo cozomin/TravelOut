@@ -21,7 +21,7 @@ void Teanc::populeazaTariFisier(const std::string& numeFisier) {
 
     std::string linie;
     while (std::getline(fin, linie)) {
-        std::string nume, cod, descriere, puncteStr, costStr;
+        std::string nume, cod, descriere, puncteStr;
         size_t pos1 = 0, pos2 = 0;
 
         pos2 = linie.find(',', pos1);

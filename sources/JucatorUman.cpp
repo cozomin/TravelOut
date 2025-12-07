@@ -32,7 +32,7 @@ bool JucatorUman::primaTura() {
         }
 
         try {
-            auto* taraEtalare = dynamic_cast<Tara*>(getCarte(index - 1));
+            const auto* taraEtalare = dynamic_cast<const Tara*>(getCarte(index - 1));
             if (taraEtalare == nullptr) {
                 std::cout << "[Eroare] Cartea aleasa nu este o tara. Incearca din nou.\n";
             } else {
@@ -163,12 +163,12 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
             return;
         }
 
-        std::vector<Bilet*> totiBiletele;
+        std::vector<const Bilet*> totiBiletele;
         bool areBiletAvion = false;
         for (size_t i = 0; i < cartiMana.size(); ++i) {
             if (i == static_cast<size_t>(index - 1)) continue;
             try {
-                if (auto* bilet = dynamic_cast<Bilet*>(getCarte(i))) {
+                if (const auto* bilet = dynamic_cast<const Bilet*>(getCarte(i))) {
                     totiBiletele.push_back(bilet);
                     if (bilet->getTip() == TipBilet::Avion) {
                         areBiletAvion = true;
@@ -195,7 +195,7 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
 
             auto it_bilet = cartiMana.begin();
             while (it_bilet != cartiMana.end()) {
-                auto* b = dynamic_cast<Bilet*>(it_bilet->get());
+                const auto* b = dynamic_cast<const Bilet*>(it_bilet->get());
                 if (b && b->getTip() == TipBilet::Avion) {
                     teancDecartare.adaugaCarte(std::move(*it_bilet));
                     it_bilet = cartiMana.erase(it_bilet);
@@ -214,7 +214,7 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
             }
 
             int distantaDisponibila = 0;
-            for (Bilet* bilet : totiBiletele) {
+            for (const Bilet* bilet : totiBiletele) {
                 distantaDisponibila += bilet->getRange();
             }
 
@@ -229,13 +229,13 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
 
             etalare.adaugaCarte(scoateCarte(index - 1));
 
-            std::vector<Bilet*> bileteDeFolosit;
+            std::vector<const Bilet*> bileteDeFolosit;
             int distantaAcumulata = 0;
             std::sort(totiBiletele.begin(), totiBiletele.end(), [](const Bilet* a, const Bilet* b) {
                 return a->getRange() < b->getRange();
             });
 
-            for (Bilet* bilet : totiBiletele) {
+            for (const Bilet* bilet : totiBiletele) {
                 if (distantaAcumulata < distantaTari) {
                     distantaAcumulata += bilet->getRange();
                     bileteDeFolosit.push_back(bilet);
@@ -264,10 +264,13 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
 
         poate_calatorii = false;
     }
-    else if (auto* actiuneJucata = dynamic_cast<Actiune*>(carteJucata)) {
+    else if (const auto* actiuneJucata = dynamic_cast<const Actiune*>(carteJucata)) {
         std::cout << "[Info] Ai jucat o carte de actiune: " << actiuneJucata->getTitlu() << '\n';
         teancDecartare.adaugaCarte(scoateCarte(index - 1));
-        actiuneJucata->executa(*this, teancPrincipal, cartiIntoarse, teancDecartare);
+        // Note: actiuneJucata is const, but executa might modify player/teanc.
+        // If executa needs a non-const Actiune, dynamic_cast to Actiune* instead.
+        // Assuming executa takes const Actiune& or handles const correctly.
+        const_cast<Actiune*>(actiuneJucata)->executa(*this, teancPrincipal, cartiIntoarse, teancDecartare);
     }
 
     actiuni--;

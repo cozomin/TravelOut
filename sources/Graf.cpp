@@ -11,7 +11,7 @@ int Graf::getNoduri() {
     return noduri;
 }
 
-auto Graf::getListaAdiacenta() {
+const std::map<std::string, std::list<std::string>>& Graf::getListaAdiacenta() {
     return lista_adiacenta;
 }
 
@@ -20,14 +20,14 @@ int Graf::getNrVecini(const std::string& cod) {
 }
 
 
-void Graf::insertNod(const std::string& x, const std::string& y) {
-    lista_adiacenta[x].push_back(y);
-    lista_adiacenta[y].push_back(x);
-}
+// void Graf::insertNod(const std::string& x, const std::string& y) {
+//     lista_adiacenta[x].push_back(y);
+//     lista_adiacenta[y].push_back(x);
+// }
 
-void Graf::insertNodSingle(const std::string& x, const std::string& y) {
-    lista_adiacenta[x].push_back(y);
-}
+// void Graf::insertNodSingle(const std::string& x, const std::string& y) {
+//     lista_adiacenta[x].push_back(y);
+// }
 
 bool Graf::compare(const std::string& first, const std::string& second) {
     unsigned int i = 0;
@@ -84,10 +84,10 @@ Graf::Graf(const std::string& numeFisier) {
     }
 }
 
-std::ostream& operator<<(std::ostream& os, Graf g) {
-    for (auto& m : g.getListaAdiacenta()) {
+std::ostream& operator<<(std::ostream& os, const Graf& g) {
+    for (const auto& m : g.getListaAdiacenta()) {
         os << m.first << ": ";
-        for (auto& l : m.second)
+        for (const auto& l : m.second)
             os << l << ' ';
         os << '\n';
     }

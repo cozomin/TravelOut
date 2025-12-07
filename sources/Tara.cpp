@@ -18,7 +18,7 @@ void Tara::afisare(std::ostream& os) const {
     os << " Cod: " << cod << "\n";
 }
 
-std::string Tara::getCod() const {
+const std::string& Tara::getCod() const {
     return cod;
 }
 

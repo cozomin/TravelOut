@@ -14,7 +14,7 @@ private:
 public:
     static int getNoduri();
 
-    static auto getListaAdiacenta();
+    static const std::map<std::string, std::list<std::string>>& getListaAdiacenta();
 
     static int getNrVecini(const std::string &cod);
 

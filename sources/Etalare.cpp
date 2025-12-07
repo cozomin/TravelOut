@@ -8,7 +8,7 @@ void Etalare::adaugaCarte(std::unique_ptr<Carte> carteNoua) {
     if (carteNoua == nullptr) return;
     
     nr_puncte += carteNoua->getPuncte();
-    if (auto* tara = dynamic_cast<Tara*>(carteNoua.get())) {
+    if (const auto* tara = dynamic_cast<const Tara*>(carteNoua.get())) {
         nume_cod_tara_curenta.first = tara->getTitlu();
         nume_cod_tara_curenta.second = tara->getCod();
         nr_tari++;

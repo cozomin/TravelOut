@@ -76,7 +76,7 @@ void JucatorRobot::joacaCarte(Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
     bool areBiletAvion = false;
     for (size_t i = 0; i < cartiMana.size(); ++i) {
         try {
-            if (auto* b = dynamic_cast<Bilet*>(getCarte(i))) {
+            if (const auto* b = dynamic_cast<const Bilet*>(getCarte(i))) {
                 if (b->getTip() == TipBilet::Avion) {
                     areBiletAvion = true;
                     break;
@@ -100,7 +100,7 @@ void JucatorRobot::joacaCarte(Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
 
                     auto it_bilet = cartiMana.begin();
                     while (it_bilet != cartiMana.end()) {
-                        auto* b = dynamic_cast<Bilet*>(it_bilet->get());
+                        const auto* b = dynamic_cast<const Bilet*>(it_bilet->get());
                         if (b && b->getTip() == TipBilet::Avion) {
                             teancDecartare.adaugaCarte(std::move(*it_bilet));
                             cartiMana.erase(it_bilet);
@@ -129,7 +129,7 @@ void JucatorRobot::joacaCarte(Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
                     int distantaDisponibila = 0;
                     for (size_t j = 0; j < cartiMana.size(); ++j) {
                         if (i == j) continue;
-                        if (const auto* bilet = dynamic_cast<Bilet*>(getCarte(j))) {
+                        if (const auto* bilet = dynamic_cast<const Bilet*>(getCarte(j))) {
                             distantaDisponibila += bilet->getRange();
                         }
                     }
@@ -155,13 +155,13 @@ void JucatorRobot::joacaCarte(Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
 
     const int distantaTari = Graf::distantaTari(etalare.getCodTaraCurenta(), taraDeJucat->getCod());
     int distantaAcumulata = 0;
-    std::vector<Bilet*> bileteDeFolosit;
+    std::vector<const Bilet*> bileteDeFolosit;
 
-    std::vector<Bilet*> toateBiletele;
+    std::vector<const Bilet*> toateBiletele;
     for (size_t i = 0; i < cartiMana.size(); ++i) {
         if (static_cast<int>(i) == taraIndex) continue;
         try {
-            if (auto* bilet = dynamic_cast<Bilet*>(getCarte(i))) {
+            if (const auto* bilet = dynamic_cast<const Bilet*>(getCarte(i))) {
                 toateBiletele.push_back(bilet);
             }
         } catch (const ActiuneInvalidaExceptie& e) {
@@ -172,7 +172,7 @@ void JucatorRobot::joacaCarte(Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
         return a->getRange() < b->getRange();
     });
 
-    for (Bilet* bilet : toateBiletele) {
+    for (const Bilet* bilet : toateBiletele) {
         if (distantaAcumulata < distantaTari) {
             distantaAcumulata += bilet->getRange();
             bileteDeFolosit.push_back(bilet);
@@ -184,7 +184,7 @@ void JucatorRobot::joacaCarte(Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
     auto it = cartiMana.begin();
     while (it != cartiMana.end()) {
         bool removed = false;
-        for (auto* biletFolosit : bileteDeFolosit) {
+        for (const auto* biletFolosit : bileteDeFolosit) {
             if (it->get() == biletFolosit) {
                 teancDecartare.adaugaCarte(std::move(*it));
                 it = cartiMana.erase(it);

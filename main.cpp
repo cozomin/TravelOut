@@ -21,6 +21,7 @@ int main() {
                 tureJucate++;
             }
         }
+        joc.afiseazaRezultate();
         std::cout << "\n=== JOCUL S-A TERMINAT ===\n";
 
     } catch (const PachetGolExceptie& e) {

@@ -18,7 +18,7 @@ public:
 
     void afisare(std::ostream& os) const override;
 
-    std::string getCod() const;
+    const std::string& getCod() const;
 
     void setDetinuta(bool d);
 };

@@ -55,9 +55,9 @@ void Jucator::incheieTura(Teanc& teancDecartare) {
     std::cout << etalare << '\n';
 }
 
-void Jucator::decartareMana() {
-    cartiMana.clear();
-}
+// void Jucator::decartareMana() {
+//     cartiMana.clear();
+// }
 
 void Jucator::swap(const unsigned long long index, std::unique_ptr<Carte> carte) {
     if (index >= cartiMana.size()) {
