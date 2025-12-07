@@ -7,6 +7,7 @@
 #include <iostream>
 #include <algorithm>
 #include <memory>
+#include <vector>
 
 JucatorRobot::JucatorRobot(const std::string& n) : Jucator(n) {}
 
@@ -72,133 +73,107 @@ void JucatorRobot::joacaCarte(Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
         }
     }
 
+    std::unique_ptr<Tara> taraToPlayIsolated = nullptr;
+    std::unique_ptr<Bilet> biletAvionToDecard = nullptr;
 
-    bool areBiletAvion = false;
-    for (size_t i = 0; i < cartiMana.size(); ++i) {
-        try {
-            if (const auto* b = dynamic_cast<const Bilet*>(getCarte(i))) {
-                if (b->getTip() == TipBilet::Avion) {
-                    areBiletAvion = true;
+    for (auto it = cartiMana.begin(); it != cartiMana.end(); ++it) {
+        if (Tara* currentTara = dynamic_cast<Tara*>(it->get())) {
+            bool esteCalatorieIzolata = !Graf::getNrVecini(etalare.getCodTaraCurenta()) || !Graf::getNrVecini(currentTara->getCod());
+            if (esteCalatorieIzolata) {
+                // Check if an airplane ticket exists in hand
+                for (auto& cardInHand : cartiMana) {
+                    if (Bilet* b = dynamic_cast<Bilet*>(cardInHand.get())) {
+                        if (b->getTip() == TipBilet::Avion) {
+                            taraToPlayIsolated = std::unique_ptr<Tara>(static_cast<Tara*>(it->release()));
+                            biletAvionToDecard = std::unique_ptr<Bilet>(static_cast<Bilet*>(cardInHand.release()));
+                            
+                            // Remove the released unique_ptrs from cartiMana
+                            cartiMana.erase(std::remove(cartiMana.begin(), cartiMana.end(), nullptr), cartiMana.end());
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if (taraToPlayIsolated && biletAvionToDecard) {
+            break;
+        }
+    }
+
+    if (taraToPlayIsolated && biletAvionToDecard) {
+        std::cout << " [Joaca Carte] " << nume << " foloseste un bilet de avion pentru a calatori in " << taraToPlayIsolated->getTitlu() << ".\n";
+        taraToPlayIsolated->setDetinuta(true);
+        etalare.adaugaCarte(std::move(taraToPlayIsolated));
+        teancDecartare.adaugaCarte(std::move(biletAvionToDecard));
+        actiuni--;
+        poate_calatorii = false;
+        return;
+    }
+    
+    std::unique_ptr<Tara> taraToPlay = nullptr;
+    std::vector<std::unique_ptr<Bilet>> bileteToDecard;
+    int distantaNecesara = -1;
+    
+    for (auto it = cartiMana.begin(); it != cartiMana.end(); ++it) {
+        if (Tara* currentTara = dynamic_cast<Tara*>(it->get())) {
+            int distantaTari = Graf::distantaTari(etalare.getCodTaraCurenta(), currentTara->getCod());
+            if (distantaTari != -1) {
+                int distantaDisponibila = 0;
+                for (auto& cardInHand : cartiMana) {
+                    if (cardInHand.get() == currentTara) continue;
+                    if (Bilet* b = dynamic_cast<Bilet*>(cardInHand.get())) {
+                        distantaDisponibila += b->getRange();
+                    }
+                }
+                if (distantaTari <= distantaDisponibila) {
+                    taraToPlay = std::unique_ptr<Tara>(static_cast<Tara*>(it->release()));
+                    distantaNecesara = distantaTari;
                     break;
                 }
             }
-        } catch (const ActiuneInvalidaExceptie& e) {
-            std::cerr << "[EROARE] Eroare la accesarea cartii bilet de avion pentru robot: " << e.what() << '\n';
         }
     }
 
-    for (size_t i = 0; i < cartiMana.size(); ++i) {
-        try {
-            if (auto* taraJucata = dynamic_cast<Tara*>(getCarte(i))) {
-                bool esteCalatorieIzolata = !Graf::getNrVecini(etalare.getCodTaraCurenta()) || !Graf::getNrVecini(taraJucata->getCod());
-
-                if (esteCalatorieIzolata && areBiletAvion) {
-                    std::cout << " [Joaca Carte] " << nume << " foloseste un bilet de avion pentru a calatori in " << taraJucata->getTitlu() << ".\n";
-                    taraJucata->setDetinuta(true);
-
-                    etalare.adaugaCarte(scoateCarte(i));
-
-                    auto it_bilet = cartiMana.begin();
-                    while (it_bilet != cartiMana.end()) {
-                        const auto* b = dynamic_cast<const Bilet*>(it_bilet->get());
-                        if (b && b->getTip() == TipBilet::Avion) {
-                            teancDecartare.adaugaCarte(std::move(*it_bilet));
-                            cartiMana.erase(it_bilet);
-                            break;
-                        }
-                        ++it_bilet;
-                    }
-
-                    actiuni--;
-                    poate_calatorii = false;
-                    return;
-                }
-            }
-        } catch (const ActiuneInvalidaExceptie& e) {
-            std::cerr << "[EROARE] Eroare la accesarea cartii tara pentru robot: " << e.what() << '\n';
-        }
-    }
-
-    int taraIndex = -1;
-    Tara* taraDeJucat = nullptr;
-    for (size_t i = 0; i < cartiMana.size(); ++i) {
-        try {
-            if (auto* tara = dynamic_cast<Tara*>(getCarte(i))) {
-                const int distantaTari = Graf::distantaTari(etalare.getCodTaraCurenta(), tara->getCod());
-                if (distantaTari != -1) {
-                    int distantaDisponibila = 0;
-                    for (size_t j = 0; j < cartiMana.size(); ++j) {
-                        if (i == j) continue;
-                        if (const auto* bilet = dynamic_cast<const Bilet*>(getCarte(j))) {
-                            distantaDisponibila += bilet->getRange();
-                        }
-                    }
-                    if (distantaTari <= distantaDisponibila) {
-                        taraIndex = i;
-                        taraDeJucat = tara;
-                        break;
-                    }
-                }
-            }
-        } catch (const ActiuneInvalidaExceptie& e) {
-            std::cerr << "[EROARE] Eroare la accesarea cartii tara sau bilet pentru robot: " << e.what() << '\n';
-        }
-    }
-
-    if (taraDeJucat == nullptr) {
+    if (taraToPlay == nullptr) {
         std::cout << " [Joaca Carte] " << nume << ": Nu are o calatorie valida de facut.\n";
         return;
     }
 
-    std::cout << " [Joaca Carte] " << nume << " calatoreste in " << taraDeJucat->getTitlu() << ".\n";
-    taraDeJucat->setDetinuta(true);
+    std::cout << " [Joaca Carte] " << nume << " calatoreste in " << taraToPlay->getTitlu() << ".\n";
+    taraToPlay->setDetinuta(true);
 
-    const int distantaTari = Graf::distantaTari(etalare.getCodTaraCurenta(), taraDeJucat->getCod());
     int distantaAcumulata = 0;
-    std::vector<const Bilet*> bileteDeFolosit;
-
-    std::vector<const Bilet*> toateBiletele;
-    for (size_t i = 0; i < cartiMana.size(); ++i) {
-        if (static_cast<int>(i) == taraIndex) continue;
-        try {
-            if (const auto* bilet = dynamic_cast<const Bilet*>(getCarte(i))) {
-                toateBiletele.push_back(bilet);
-            }
-        } catch (const ActiuneInvalidaExceptie& e) {
-            std::cerr << "[EROARE] Eroare la accesarea cartii bilet pentru robot: " << e.what() << '\n';
+    std::vector<Bilet*> availableTickets;
+    for (auto& cardInHand : cartiMana) {
+        if (Bilet* b = dynamic_cast<Bilet*>(cardInHand.get())) {
+            availableTickets.push_back(b);
         }
     }
-    std::sort(toateBiletele.begin(), toateBiletele.end(), [](const Bilet* a, const Bilet* b) {
+    std::sort(availableTickets.begin(), availableTickets.end(), [](const Bilet* a, const Bilet* b) {
         return a->getRange() < b->getRange();
     });
 
-    for (const Bilet* bilet : toateBiletele) {
-        if (distantaAcumulata < distantaTari) {
+    for (Bilet* bilet : availableTickets) {
+        if (distantaAcumulata < distantaNecesara) {
             distantaAcumulata += bilet->getRange();
-            bileteDeFolosit.push_back(bilet);
-        }
-    }
-
-    etalare.adaugaCarte(scoateCarte(taraIndex));
-
-    auto it = cartiMana.begin();
-    while (it != cartiMana.end()) {
-        bool removed = false;
-        for (const auto* biletFolosit : bileteDeFolosit) {
-            if (it->get() == biletFolosit) {
-                teancDecartare.adaugaCarte(std::move(*it));
-                it = cartiMana.erase(it);
-                removed = true;
-                break;
+            auto it = std::find_if(cartiMana.begin(), cartiMana.end(), [&](const std::unique_ptr<Carte>& card){
+                return card.get() == bilet;
+            });
+            if (it != cartiMana.end()) {
+                bileteToDecard.push_back(std::unique_ptr<Bilet>(static_cast<Bilet*>(it->release())));
             }
         }
-        if (!removed) {
-            ++it;
-        }
     }
 
-    std::cout << "[Info] S-au folosit " << bileteDeFolosit.size()
-              << " bilete (Total valoare: " << distantaAcumulata << ") pentru distanta " << distantaTari << ".\n";
+    std::erase(cartiMana, nullptr);
+
+    etalare.adaugaCarte(std::move(taraToPlay));
+    for (auto& bilet : bileteToDecard) {
+        teancDecartare.adaugaCarte(std::move(bilet));
+    }
+
+    std::cout << "[Info] S-au folosit " << bileteToDecard.size()
+              << " bilete (Total valoare: " << distantaAcumulata << ") pentru distanta " << distantaNecesara << ".\n";
 
     actiuni--;
     poate_calatorii = false;

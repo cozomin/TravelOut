@@ -8,7 +8,7 @@ int main() {
     try {
         const std::vector<std::string> numeJucatori = {"Cosmin", "Bumblebee"};
 
-        Joc joc(numeJucatori, 8, 3, 3, 1, 1);
+        Joc joc(numeJucatori, 8, 3, 3, 2, 0);
 
         joc.setupInitial();
 
