@@ -198,7 +198,7 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
                 const auto* b = dynamic_cast<const Bilet*>(it_bilet->get());
                 if (b && b->getTip() == TipBilet::Avion) {
                     teancDecartare.adaugaCarte(std::move(*it_bilet));
-                    it_bilet = cartiMana.erase(it_bilet);
+                    cartiMana.erase(it_bilet);
                     break;
                 }
                 ++it_bilet;

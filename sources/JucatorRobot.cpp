@@ -57,7 +57,7 @@ void JucatorRobot::joacaCarte(Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
 
     for (size_t i = 0; i < cartiMana.size(); ++i) {
         try {
-            if (auto* actiune = dynamic_cast<Actiune*>(getCarte(i))) {
+            if (const auto* actiune = dynamic_cast<const Actiune*>(getCarte(i))) {
                 std::cout << " [Joaca Carte] " << nume << " joaca o carte Actiune: " << actiune->getTitlu() << ".\n";
                 actiune->executa(*this, teancPrincipal, cartiIntoarse, teancDecartare);
                 teancDecartare.adaugaCarte(scoateCarte(i));
