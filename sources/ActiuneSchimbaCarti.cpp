@@ -18,8 +18,8 @@ void ActiuneSchimbaCarti::executa(Jucator &jucator, Teanc &teancPrincipal, Teanc
 
     if (dynamic_cast<JucatorRobot*>(&jucator)) {
         if (jucator.getNrCartiMana() > 0) {
-            numarCarti = 1; // Robot chooses to discard 1 card
-            indexiDeSters.push_back(0); // Robot discards the first card
+            numarCarti = 1;
+            indexiDeSters.push_back(0);
             std::cout << "[Info] Jucatorul robot alege sa schimbe 1 carte (prima din mana).\n";
         } else {
             std::cout << "[Info] Jucatorul robot nu are carti de schimbat.\n";
@@ -68,7 +68,7 @@ void ActiuneSchimbaCarti::executa(Jucator &jucator, Teanc &teancPrincipal, Teanc
             }
         }
     }
-    
+
     std::sort(indexiDeSters.rbegin(), indexiDeSters.rend());
 
     for (int index : indexiDeSters) {
