@@ -14,13 +14,13 @@ int main() {
 
         std::cout << "Jocul a fost initializat cu succes!\n";
 
-        while (joc.joacaRunda()) {
-            int tureJucate = 0;
-            while (tureJucate < 0 && joc.joacaRunda()) {
-                std::cout << "\n...sfarsitul turei " << (tureJucate + 1) << "...\n";
-                tureJucate++;
-            }
+
+        int tureJucate = 0;
+        while (tureJucate < 8 && joc.joacaRunda()) {
+            std::cout << "\n...sfarsitul turei " << (tureJucate + 1) << "...\n";
+            tureJucate++;
         }
+
         joc.afiseazaRezultate();
         std::cout << "\n=== JOCUL S-A TERMINAT ===\n";
 
