@@ -16,7 +16,7 @@ int main() {
 
         while (joc.joacaRunda()) {
             int tureJucate = 0;
-            while (tureJucate < 8 && joc.joacaRunda()) {
+            while (tureJucate < 0 && joc.joacaRunda()) {
                 std::cout << "\n...sfarsitul turei " << (tureJucate + 1) << "...\n";
                 tureJucate++;
             }
