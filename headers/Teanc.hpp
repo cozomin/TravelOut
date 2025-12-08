@@ -19,7 +19,7 @@ public:
     explicit Teanc(const int nr_aparitii_actiune = 3) : nr_aparitii_actiune(nr_aparitii_actiune) {};
 
     void adaugaCarte(std::unique_ptr<Carte> carteNoua);
-    std::unique_ptr<Carte> trageCarte(unsigned long long index = 0);
+    std::unique_ptr<Carte> trageCarte(long long index = 0);
 
     Carte *vizualizareCarte(unsigned long long index) const;
 

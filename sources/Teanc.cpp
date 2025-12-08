@@ -15,7 +15,6 @@
 void Teanc::populeazaTariFisier(const std::string& numeFisier) {
     std::ifstream fin(numeFisier);
     if (!fin.is_open()) {
-        // Aruncam exceptie daca fisierul nu poate fi deschis
         throw InitializareJocExceptie("Nu s-a putut deschide fisierul " + numeFisier);
     }
 
@@ -93,11 +92,11 @@ void Teanc::adaugaCarte(std::unique_ptr<Carte> carteNoua) {
     carti.push_back(std::move(carteNoua));
 }
 
-std::unique_ptr<Carte> Teanc::trageCarte(const unsigned long long index) {
+std::unique_ptr<Carte> Teanc::trageCarte(const long long index) {
     if (carti.empty()) {
         throw PachetGolExceptie("Nu se poate trage o carte dintr-un pachet gol.");
     }
-    if (index >= carti.size()) {
+    if (static_cast<unsigned long long>(index) >= carti.size()) {
         throw ActiuneInvalidaExceptie("Indexul specificat pentru tragerea cartii este in afara limitelor.");
     }
 

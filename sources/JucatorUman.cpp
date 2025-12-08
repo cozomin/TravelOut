@@ -98,7 +98,7 @@ void JucatorUman::trageCarteMana(Teanc& teancPrincipal, Teanc& cartiIntoarse) {
             }
         }
         try {
-            auto carteNoua = cartiIntoarse.trageCarte(alegere - 1);
+            auto carteNoua = cartiIntoarse.trageCarte(static_cast<long long>(alegere) - 1);
             std::cout << " [Trage Carte] " << nume << " a tras cartea: " << carteNoua->getTitlu() << '\n';
             adaugaCarte(std::move(carteNoua));
         } catch (const PachetGolExceptie& e) {
@@ -151,7 +151,6 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
                 break;
             } catch (const ActiuneInvalidaExceptie& e) {
                 std::cerr << "[Eroare] " << e.what() << " Te rog alege un numar din lista.\n";
-                // Continuam bucla pentru a cere input valid
             }
         }
     }
@@ -267,10 +266,7 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
     else if (const auto* actiuneJucata = dynamic_cast<const Actiune*>(carteJucata)) {
         std::cout << "[Info] Ai jucat o carte de actiune: " << actiuneJucata->getTitlu() << '\n';
         teancDecartare.adaugaCarte(scoateCarte(index - 1));
-        // Note: actiuneJucata is const, but executa might modify player/teanc.
-        // If executa needs a non-const Actiune, dynamic_cast to Actiune* instead.
-        // Assuming executa takes const Actiune& or handles const correctly.
-        const_cast<Actiune*>(actiuneJucata)->executa(*this, teancPrincipal, cartiIntoarse, teancDecartare);
+        actiuneJucata->executa(*this, teancPrincipal, cartiIntoarse, teancDecartare);
     }
 
     actiuni--;
