@@ -8,6 +8,9 @@ ActiuneBonus::ActiuneBonus(const std::string &t, const std::string &d)
 
 void ActiuneBonus::executa(Jucator &jucator, Teanc &teancPrincipal, Teanc &cartiIntoarse,
                            Teanc &teancDecartare) const {
+    (void)teancPrincipal;
+    (void)cartiIntoarse;
+    (void)teancDecartare;
     std::cout << "[Actiune] " << jucator.getNume() << " primeste 3 actiuni bonus!\n";
     jucator.addActiuni(3);
 }

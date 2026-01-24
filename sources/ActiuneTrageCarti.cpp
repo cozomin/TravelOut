@@ -12,6 +12,8 @@ ActiuneTrageCarti::ActiuneTrageCarti(const std::string &t, const int nrCarti, co
 
 void ActiuneTrageCarti::executa(Jucator &jucator, Teanc &teancPrincipal, Teanc &cartiIntoarse,
                                 Teanc &teancDecartare) const {
+    (void)cartiIntoarse;
+    (void)teancDecartare;
     std::cout << "[Actiune] " << jucator.getNume() << " trage " << numarCarti << " carti.\n";
     for (int i = 0; i < numarCarti; ++i) {
         jucator.trageCarteMana(teancPrincipal);
