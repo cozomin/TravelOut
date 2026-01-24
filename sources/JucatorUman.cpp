@@ -10,13 +10,14 @@
 #include <limits>
 #include <memory>
 
-JucatorUman::JucatorUman(const std::string& n) : Jucator(n) {}
+JucatorUman::JucatorUman(const std::string &n) : Jucator(n) {
+}
 
 bool JucatorUman::primaTura() {
     long long indexTara = -1;
     std::cout << "[Prima Tura]: Alege o carte tara de start din mana:\n";
     int index = 1;
-    for (const auto& carte : cartiMana) {
+    for (const auto &carte: cartiMana) {
         std::cout << "  [" << index++ << "] " << *carte << '\n';
     }
 
@@ -32,13 +33,13 @@ bool JucatorUman::primaTura() {
         }
 
         try {
-            const auto* taraEtalare = dynamic_cast<const Tara*>(getCarte(index - 1));
+            const auto *taraEtalare = dynamic_cast<const Tara *>(getCarte(index - 1));
             if (taraEtalare == nullptr) {
                 std::cout << "[Eroare] Cartea aleasa nu este o tara. Incearca din nou.\n";
             } else {
                 indexTara = index;
             }
-        } catch (const ActiuneInvalidaExceptie& e) {
+        } catch (const ActiuneInvalidaExceptie &e) {
             std::cerr << "[Eroare] " << e.what() << " Te rog alege un numar din lista.\n";
         }
     }
@@ -49,7 +50,7 @@ bool JucatorUman::primaTura() {
     return true;
 }
 
-void JucatorUman::trageCarteMana(Teanc& teancPrincipal, Teanc& cartiIntoarse) {
+void JucatorUman::trageCarteMana(Teanc &teancPrincipal, Teanc &cartiIntoarse) {
     std::cout << "\n=== Faza de Tras Carti ===\n";
     std::cout << "Poti alege una dintre urmatoarele optiuni:\n";
     std::cout << "  1. Trage 2 carti noi din teancul principal.\n";
@@ -75,11 +76,11 @@ void JucatorUman::trageCarteMana(Teanc& teancPrincipal, Teanc& cartiIntoarse) {
                 auto carteNoua = teancPrincipal.trageCarte();
                 std::cout << " Ai tras cartea: " << carteNoua->getTitlu() << '\n';
                 adaugaCarte(std::move(carteNoua));
-            } catch (const PachetGolExceptie& e) {
+            } catch (const PachetGolExceptie &e) {
                 std::cerr << "[AVERTISMENT] " << e.what() << '\n';
                 std::cout << "[Info] Nu mai sunt carti in teancul principal.\n";
                 break;
-            } catch (const ActiuneInvalidaExceptie& e) {
+            } catch (const ActiuneInvalidaExceptie &e) {
                 std::cerr << "[EROARE] " << e.what() << '\n';
                 throw;
             }
@@ -87,7 +88,8 @@ void JucatorUman::trageCarteMana(Teanc& teancPrincipal, Teanc& cartiIntoarse) {
     } else {
         std::cout << "[Info] Ai ales o carte dintre cele vizibile.\n";
         while (true) {
-            std::cout << "Introduce numarul cartii pe care doresti sa o alegi (1-" << cartiIntoarse.getNrCarti() << "): ";
+            std::cout << "Introduce numarul cartii pe care doresti sa o alegi (1-" << cartiIntoarse.getNrCarti() <<
+                    "): ";
             std::cin >> alegere;
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             if (std::cin.fail() || alegere < 1 || alegere > cartiIntoarse.getNrCarti()) {
@@ -101,26 +103,26 @@ void JucatorUman::trageCarteMana(Teanc& teancPrincipal, Teanc& cartiIntoarse) {
             auto carteNoua = cartiIntoarse.trageCarte(static_cast<long long>(alegere) - 1);
             std::cout << " [Trage Carte] " << nume << " a tras cartea: " << carteNoua->getTitlu() << '\n';
             adaugaCarte(std::move(carteNoua));
-        } catch (const PachetGolExceptie& e) {
+        } catch (const PachetGolExceptie &e) {
             std::cerr << "[AVERTISMENT] " << e.what() << '\n';
             std::cout << "[Info] Nu mai sunt carti vizibile.\n";
-        } catch (const ActiuneInvalidaExceptie& e) {
+        } catch (const ActiuneInvalidaExceptie &e) {
             std::cerr << "[EROARE] " << e.what() << '\n';
             throw;
         }
     }
 }
 
-void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc& teancDecartare) {
+bool JucatorUman::joacaCarte(Teanc &teancPrincipal, Teanc &cartiIntoarse, Teanc &teancDecartare) {
     if (actiuni <= 0) {
         std::cout << "[Info] Nu mai ai actiuni disponibile in aceasta tura.\n";
-        return;
+        return false;
     }
 
     std::cout << "\n=== Faza de Joaca Carte ===\n";
     std::cout << "Cartile tale din mana:\n";
     int idx = 1;
-    for (const auto& carte : cartiMana) {
+    for (const auto &carte: cartiMana) {
         std::cout << "  [" << idx++ << "] " << *carte << '\n';
     }
     std::cout << etalare << std::endl;
@@ -137,64 +139,69 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
         }
         if (index == 0) {
             std::cout << "[Info] Ai ales sa nu joci nicio carte in aceasta tura.\n";
-            return;
+            return false;
         }
 
         if (index < 1 || static_cast<size_t>(index) > cartiMana.size()) {
             std::cout << "[Eroare] Numarul ales nu este valid. Incearca din nou.\n";
         } else {
             try {
-                if (dynamic_cast<Bilet*>(getCarte(index - 1))) {
+                if (dynamic_cast<Bilet *>(getCarte(index - 1))) {
                     std::cout << "[Eroare] Cartea selectata nu este o tara sau o actiune. Incearca din nou.\n";
                     continue;
                 }
                 break;
-            } catch (const ActiuneInvalidaExceptie& e) {
+            } catch (const ActiuneInvalidaExceptie &e) {
                 std::cerr << "[Eroare] " << e.what() << " Te rog alege un numar din lista.\n";
             }
         }
     }
 
-    auto* carteJucata = getCarte(index - 1);
-    if (auto* taraJucata = dynamic_cast<Tara*>(carteJucata)) {
+    auto *carteJucata = getCarte(index - 1);
+    if (auto *taraJucata = dynamic_cast<Tara *>(carteJucata)) {
         if (!poate_calatorii) {
             std::cout << "[Info] Ai calatorit deja in aceasta tura.\n";
-            return;
+            return false;
         }
 
-        std::vector<const Bilet*> totiBiletele;
+        std::vector<const Bilet *> totiBiletele;
         bool areBiletAvion = false;
         for (size_t i = 0; i < cartiMana.size(); ++i) {
             if (i == static_cast<size_t>(index - 1)) continue;
             try {
-                if (const auto* bilet = dynamic_cast<const Bilet*>(getCarte(i))) {
+                if (const auto *bilet = dynamic_cast<const Bilet *>(getCarte(i))) {
                     totiBiletele.push_back(bilet);
                     if (bilet->getTip() == TipBilet::Avion) {
                         areBiletAvion = true;
                     }
                 }
-            } catch (const ActiuneInvalidaExceptie& e) {
+            } catch (const ActiuneInvalidaExceptie &e) {
                 std::cerr << "[EROARE INTERNA] " << e.what() << '\n';
             }
         }
 
-        bool esteCalatorieIzolata = !Graf::getNrVecini(etalare.getCodTaraCurenta()) || !Graf::getNrVecini(taraJucata->getCod());
+        bool esteCalatorieIzolata = !Graf::getNrVecini(etalare.getCodTaraCurenta()) || !Graf::getNrVecini(
+                                        taraJucata->getCod());
 
         if (esteCalatorieIzolata) {
             if (!areBiletAvion) {
-                const std::string tara_izolata = !Graf::getNrVecini(taraJucata->getCod()) ? taraJucata->getTitlu() : etalare.getNumeTaraCurenta();
-                std::cout << "[Eroare] Pentru a calatori in sau din " << tara_izolata << " este necesar un bilet de avion.\n";
-                return;
+                const std::string tara_izolata = !Graf::getNrVecini(taraJucata->getCod())
+                                                     ? taraJucata->getTitlu()
+                                                     : etalare.getNumeTaraCurenta();
+                std::cout << "[Eroare] Pentru a calatori in sau din " << tara_izolata <<
+                        " este necesar un bilet de avion.\n";
+                return false;
             }
 
-            std::cout << "\n[Succes] Calatorie reusita cu bilet de avion! Ai ajuns in " << taraJucata->getTitlu() << ".\n";
+            std::cout << "\n[Succes] Calatorie reusita cu bilet de avion! Ai ajuns in " << taraJucata->getTitlu() <<
+                    ".\n";
             taraJucata->setDetinuta(true);
 
             etalare.adaugaCarte(scoateCarte(index - 1));
 
             auto it_bilet = cartiMana.begin();
             while (it_bilet != cartiMana.end()) {
-                const auto* b = dynamic_cast<const Bilet*>(it_bilet->get());
+                const auto *b = dynamic_cast<const Bilet *>(it_bilet->get());
                 if (b && b->getTip() == TipBilet::Avion) {
                     teancDecartare.adaugaCarte(std::move(*it_bilet));
                     cartiMana.erase(it_bilet);
@@ -204,7 +211,6 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
             }
 
             std::cout << "[Info] S-a folosit un bilet de avion.\n";
-
         } else {
             const int distantaTari = Graf::distantaTari(etalare.getCodTaraCurenta(), taraJucata->getCod());
             if (distantaTari == -1) {
@@ -213,14 +219,14 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
             }
 
             int distantaDisponibila = 0;
-            for (const Bilet* bilet : totiBiletele) {
+            for (const Bilet *bilet: totiBiletele) {
                 distantaDisponibila += bilet->getRange();
             }
 
             if (distantaTari > distantaDisponibila) {
                 std::cout << "[Info] Calatorie esuata! Distanta necesara este " << distantaTari
-                          << ", dar biletele tale insumeaza doar " << distantaDisponibila << ".\n";
-                return;
+                        << ", dar biletele tale insumeaza doar " << distantaDisponibila << ".\n";
+                return false;
             }
 
             std::cout << "\n[Succes] Calatorie reusita! Ai ajuns in " << taraJucata->getTitlu() << ".\n";
@@ -228,13 +234,13 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
 
             etalare.adaugaCarte(scoateCarte(index - 1));
 
-            std::vector<const Bilet*> bileteDeFolosit;
+            std::vector<const Bilet *> bileteDeFolosit;
             int distantaAcumulata = 0;
-            std::sort(totiBiletele.begin(), totiBiletele.end(), [](const Bilet* a, const Bilet* b) {
+            std::sort(totiBiletele.begin(), totiBiletele.end(), [](const Bilet *a, const Bilet *b) {
                 return a->getRange() < b->getRange();
             });
 
-            for (const Bilet* bilet : totiBiletele) {
+            for (const Bilet *bilet: totiBiletele) {
                 if (distantaAcumulata < distantaTari) {
                     distantaAcumulata += bilet->getRange();
                     bileteDeFolosit.push_back(bilet);
@@ -244,7 +250,7 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
             auto it = cartiMana.begin();
             while (it != cartiMana.end()) {
                 bool removed = false;
-                for (const auto* biletFolosit : bileteDeFolosit) {
+                for (const auto *biletFolosit: bileteDeFolosit) {
                     if (it->get() == biletFolosit) {
                         teancDecartare.adaugaCarte(std::move(*it));
                         it = cartiMana.erase(it);
@@ -258,31 +264,32 @@ void JucatorUman::joacaCarte( Teanc& teancPrincipal, Teanc& cartiIntoarse, Teanc
             }
 
             std::cout << "[Info] S-au folosit " << bileteDeFolosit.size()
-                      << " bilete (Total valoare: " << distantaAcumulata << ") pentru distanta " << distantaTari << ".\n";
+                    << " bilete (Total valoare: " << distantaAcumulata << ") pentru distanta " << distantaTari << ".\n";
         }
 
         poate_calatorii = false;
-    }
-    else if (const auto* actiuneJucata = dynamic_cast<const Actiune*>(carteJucata)) {
+    } else if (const auto *actiuneJucata = dynamic_cast<const Actiune *>(carteJucata)) {
         std::cout << "[Info] Ai jucat o carte de actiune: " << actiuneJucata->getTitlu() << '\n';
         teancDecartare.adaugaCarte(scoateCarte(index - 1));
         actiuneJucata->executa(*this, teancPrincipal, cartiIntoarse, teancDecartare);
     }
 
     actiuni--;
+    return true;
 }
 
-void JucatorUman::joacaCarte(Teanc&, Teanc&) {
-    throw ActiuneInvalidaExceptie("Metoda joacaCarte(Teanc&, Teanc&) nu este implementata pentru JucatorUman si nu ar trebui apelata.");
+bool JucatorUman::joacaCarte(Teanc &, Teanc &) {
+    throw ActiuneInvalidaExceptie(
+        "Metoda joacaCarte(Teanc&, Teanc&) nu este implementata pentru JucatorUman si nu ar trebui apelata.");
 }
 
-void JucatorUman::incheieTura(Teanc& teancDecartare) {
+void JucatorUman::incheieTura(Teanc &teancDecartare) {
     std::cout << "\n=== Sfarsitul Turei: Decartare Obligatorie ===\n";
     if (!cartiMana.empty()) {
         int index = -1;
         std::cout << "Cartile tale din mana:\n";
         int idx = 1;
-        for (const auto& carte : cartiMana) {
+        for (const auto &carte: cartiMana) {
             std::cout << "  [" << idx++ << "] " << *carte << '\n';
         }
         std::cout << etalare << std::endl;
@@ -301,7 +308,6 @@ void JucatorUman::incheieTura(Teanc& teancDecartare) {
 
         teancDecartare.adaugaCarte(scoateCarte(index - 1));
         std::cout << "[Info] Ai decartat cartea de la indexul " << index << '\n';
-
     } else {
         std::cout << " [Decartare] " << nume << " nu are carti de decartat.\n";
     }

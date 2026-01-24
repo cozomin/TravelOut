@@ -8,11 +8,13 @@
 #include <chrono>
 #include <limits>
 
-ActiuneDecarteazaIntoarceAlege::ActiuneDecarteazaIntoarceAlege(const std::string& t, const std::string& d, const int p = 0)
-    : Actiune(t, d, p) {}
+ActiuneDecarteazaIntoarceAlege::ActiuneDecarteazaIntoarceAlege(const std::string &t, const std::string &d,
+                                                               const int p = 0)
+    : Actiune(t, d, p) {
+}
 
-void ActiuneDecarteazaIntoarceAlege::executa(Jucator &jucator, Teanc &teancPrincipal, Teanc &cartiIntoarse, Teanc &teancDecartare) const {
-
+void ActiuneDecarteazaIntoarceAlege::executa(Jucator &jucator, Teanc &teancPrincipal, Teanc &cartiIntoarse,
+                                             Teanc &teancDecartare) const {
     for (unsigned long long i = 0; i < cartiIntoarse.getNrCarti(); ++i) {
         std::unique_ptr<Carte> carteDecartata = cartiIntoarse.trageCarte();
         if (carteDecartata) {
@@ -21,12 +23,11 @@ void ActiuneDecarteazaIntoarceAlege::executa(Jucator &jucator, Teanc &teancPrinc
     }
     std::cout << "Cele 3 carti intoarse au fost decartate." << std::endl;
 
-    std::vector<std::unique_ptr<Carte>> noiCartiIntoarse;
+    std::vector<std::unique_ptr<Carte> > noiCartiIntoarse;
     for (int i = 0; i < 3; ++i) {
         if (teancPrincipal.getNrCarti() > 0) {
             noiCartiIntoarse.push_back(teancPrincipal.trageCarte());
-        }
-        else {
+        } else {
             std::cout << "Teancul principal este gol. Nu se mai pot intoarce carti." << std::endl;
             break;
         }
@@ -37,10 +38,10 @@ void ActiuneDecarteazaIntoarceAlege::executa(Jucator &jucator, Teanc &teancPrinc
         for (size_t i = 0; i < noiCartiIntoarse.size(); ++i) {
             std::cout << i + 1 << ". " << noiCartiIntoarse[i]->getTitlu() << std::endl;
         }
-        
+
         int chosenIndex = 0;
 
-        if (dynamic_cast<JucatorRobot*>(&jucator)) {
+        if (dynamic_cast<JucatorRobot *>(&jucator)) {
             std::cout << "Jucatorul robot alege prima carte: " << noiCartiIntoarse[0]->getTitlu() << std::endl;
             chosenIndex = 0;
         } else {
@@ -51,7 +52,8 @@ void ActiuneDecarteazaIntoarceAlege::executa(Jucator &jucator, Teanc &teancPrinc
                 std::cin >> alegereUser;
 
                 if (std::cin.fail() || alegereUser < 1 || alegereUser > noiCartiIntoarse.size()) {
-                    std::cout << "Input invalid. Te rog sa introduci un numar intre 1 si " << noiCartiIntoarse.size() << "." << std::endl;
+                    std::cout << "Input invalid. Te rog sa introduci un numar intre 1 si " << noiCartiIntoarse.size() <<
+                            "." << std::endl;
                     std::cin.clear();
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 } else {
@@ -63,15 +65,15 @@ void ActiuneDecarteazaIntoarceAlege::executa(Jucator &jucator, Teanc &teancPrinc
 
         std::unique_ptr<Carte> carteAleasa = std::move(noiCartiIntoarse[chosenIndex]);
         jucator.adaugaCarte(std::move(carteAleasa));
-        std::cout << "Jucatorul a ales cartea: " << jucator.getCarte(jucator.getNrCartiMana() - 1)->getTitlu() << std::endl;
+        std::cout << "Jucatorul a ales cartea: " << jucator.getCarte(jucator.getNrCartiMana() - 1)->getTitlu() <<
+                std::endl;
 
         noiCartiIntoarse.erase(noiCartiIntoarse.begin() + chosenIndex);
-        for (auto& carte : noiCartiIntoarse) {
+        for (auto &carte: noiCartiIntoarse) {
             cartiIntoarse.adaugaCarte(std::move(carte));
         }
         std::cout << "Restul cartilor au fost adaugate inapoi in teancul de carti intoarse." << std::endl;
-    }
-    else {
+    } else {
         std::cout << "Nu s-au putut intoarce carti noi din teancul principal." << std::endl;
     }
 }

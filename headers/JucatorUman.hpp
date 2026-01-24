@@ -5,23 +5,33 @@
 #include <string>
 #include <ostream>
 
+/**
+ * Class representing a human player.
+ * Implements interaction logic via console input.
+ */
 class JucatorUman : public Jucator {
 public:
-    explicit JucatorUman(const std::string& n);
+    explicit JucatorUman(const std::string &n);
+
     ~JucatorUman() override = default;
-    JucatorUman(const JucatorUman& other) = delete;
-    JucatorUman& operator=(const JucatorUman& other) = delete;
-    JucatorUman(JucatorUman&& other) = default;
-    JucatorUman& operator=(JucatorUman&& other) = default;
+
+    JucatorUman(const JucatorUman &other) = delete;
+
+    JucatorUman &operator=(const JucatorUman &other) = delete;
+
+    JucatorUman(JucatorUman &&other) = default;
+
+    JucatorUman &operator=(JucatorUman &&other) = default;
 
     bool primaTura() override;
 
     void trageCarteMana(Teanc &teancPrincipal, Teanc &cartiIntoarse) override;
 
-    void joacaCarte(Teanc &teancPrincipal, Teanc &cartiIntoarse, Teanc &teancDecartare) override;
-    void joacaCarte(Teanc& teancPrincipal, Teanc& teancDecartare) override;
+    bool joacaCarte(Teanc &teancPrincipal, Teanc &cartiIntoarse, Teanc &teancDecartare) override;
 
-    void incheieTura(Teanc& teancDecartare) override;
+    bool joacaCarte(Teanc &teancPrincipal, Teanc &teancDecartare) override;
+
+    void incheieTura(Teanc &teancDecartare) override;
 };
 
 #endif //JUCATOR_UMAN_HPP

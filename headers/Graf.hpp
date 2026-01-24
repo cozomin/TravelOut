@@ -6,29 +6,36 @@
 #include <string>
 #include <list>
 
+/**
+ * Class representing the map of countries as a graph.
+ * Uses an adjacency list to store connections.
+ */
 class Graf {
 private:
     static int noduri;
-    static std::map<std::string, std::list<std::string>> lista_adiacenta;
+    static std::map<std::string, std::list<std::string> > lista_adiacenta;
 
 public:
     static int getNoduri();
 
-    static const std::map<std::string, std::list<std::string>>& getListaAdiacenta();
+    static const std::map<std::string, std::list<std::string> > &getListaAdiacenta();
 
     static int getNrVecini(const std::string &cod);
 
-    static void insertNod(const std::string& x, const std::string& y);
+    static void insertNod(const std::string &x, const std::string &y);
 
-    static void insertNodSingle(const std::string& x, const std::string& y);
+    static void insertNodSingle(const std::string &x, const std::string &y);
 
-    static bool compare(const std::string& first, const std::string& second);
+    static bool compare(const std::string &first, const std::string &second);
 
-    explicit Graf(const std::string& numeFisier = "GrafTari.txt");
+    explicit Graf(const std::string &numeFisier = "GrafTari.txt");
 
-    friend std::ostream& operator<<(std::ostream& os, const Graf& g);
+    friend std::ostream &operator<<(std::ostream &os, const Graf &g);
 
-    static int distantaTari(const std::string& startNode, const std::string& endNode);
+    /**
+     * Calculates the shortest distance (BFS) between two countries.
+     */
+    static int distantaTari(const std::string &startNode, const std::string &endNode);
 
     friend class Teanc;
 };

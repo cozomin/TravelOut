@@ -4,6 +4,8 @@
 #include "ActiuneTrageCarti.hpp"
 #include "ActiuneDecarteazaIntoarceAlege.hpp"
 #include "ActiuneSchimbaCarti.hpp"
+#include "ActiuneBonus.hpp"
+#include "FabricaCarti.hpp"
 #include "Exceptii.hpp"
 #include <iostream>
 #include <fstream>
@@ -12,7 +14,7 @@
 #include <chrono>
 #include <utility>
 
-void Teanc::populeazaTariFisier(const std::string& numeFisier) {
+void Teanc::populeazaTariFisier(const std::string &numeFisier) {
     std::ifstream fin(numeFisier);
     if (!fin.is_open()) {
         throw InitializareJocExceptie("Nu s-a putut deschide fisierul " + numeFisier);
@@ -40,7 +42,8 @@ void Teanc::populeazaTariFisier(const std::string& numeFisier) {
 
         const int puncte = std::stoi(puncteStr);
 
-        carti.push_back(std::make_unique<Tara>(nume, descriere, puncte, cod));
+        // Use Factory
+        carti.adauga(FabricaCarti::creazaTara(nume, descriere, puncte, cod));
     }
 
     fin.close();
@@ -50,7 +53,7 @@ void Teanc::populeazaTariFisier(const std::string& numeFisier) {
 void Teanc::populeazaTeanc() {
     populeazaTariFisier("Tari.txt");
 
-    for (const auto& pair : Bilet::get_nr_aparitii_teanc()) {
+    for (const auto &pair: Bilet::get_nr_aparitii_teanc()) {
         const TipBilet tip = pair.first;
         const int numar = pair.second;
         std::string nume, desc;
@@ -69,27 +72,30 @@ void Teanc::populeazaTeanc() {
                 break;
         }
         for (int i = 0; i < numar; i++) {
-            carti.push_back(std::make_unique<Bilet>(nume, desc, tip));
+            // Use Factory
+            carti.adauga(FabricaCarti::creazaBilet(nume, desc, tip));
         }
     }
 
     for (int i = 0; i < nr_aparitii_actiune; i++) {
-        carti.push_back(std::make_unique<ActiuneTrageCarti>("ATM", 3, 0));
-        carti.push_back(std::make_unique<ActiuneTrageCarti>("Viata de hostel", 2, 1));
-        carti.push_back(std::make_unique<ActiuneSchimbaCarti>("O noua viata", "Decarteaza un numar de carti si trage tot atatea la schimb."));
-        carti.push_back(std::make_unique<ActiuneDecarteazaIntoarceAlege>("Croaziera", "Decarteaza toate cartile intoarse. Intoarce altele noi si ia una dintre ele", 0));
+        // Use Factory
+        carti.adauga(FabricaCarti::creazaActiuneTrageCarti("ATM", 3, 0));
+        carti.adauga(FabricaCarti::creazaActiuneTrageCarti("Viata de hostel", 2, 1));
+        carti.adauga(FabricaCarti::creazaActiuneSchimbaCarti("O noua viata",
+                                                              "Decarteaza un numar de carti si trage tot atatea la schimb."));
+        carti.adauga(FabricaCarti::creazaActiuneDecarteaza(
+            "Croaziera", "Decarteaza toate cartile intoarse. Intoarce altele noi si ia una dintre ele"));
+        carti.adauga(FabricaCarti::creazaActiuneBonus("Bonus", "Primesti 3 actiuni bonus."));
     }
 }
 
 void Teanc::amestecaTeanc() {
-    const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::ranges::shuffle(carti, std::default_random_engine(seed));
+    carti.amesteca();
     std::cout << "[Info] Teancul principal a fost amestecat.\n";
 }
 
 void Teanc::adaugaCarte(std::unique_ptr<Carte> carteNoua) {
-    if (carteNoua == nullptr) return;
-    carti.push_back(std::move(carteNoua));
+    carti.adauga(std::move(carteNoua));
 }
 
 std::unique_ptr<Carte> Teanc::trageCarte(const long long index) {
@@ -100,14 +106,11 @@ std::unique_ptr<Carte> Teanc::trageCarte(const long long index) {
         throw ActiuneInvalidaExceptie("Indexul specificat pentru tragerea cartii este in afara limitelor.");
     }
 
-    std::unique_ptr<Carte> carteTrasa = std::move(carti.at(index));
-    carti.erase(carti.begin() + index);
-    return carteTrasa;
+    return carti.scoate(index);
 }
 
-Carte* Teanc::vizualizareCarte(const unsigned long long index) const {
-    if (index >= carti.size()) return nullptr;
-    return carti.at(index).get();
+Carte *Teanc::vizualizareCarte(const unsigned long long index) const {
+    return carti.get(index);
 }
 
 void Teanc::initializeazaTeancPrincipal() {
@@ -120,10 +123,10 @@ unsigned long long Teanc::getNrCarti() const {
     return carti.size();
 }
 
-std::ostream& operator<<(std::ostream& os, const Teanc& t) {
+std::ostream &operator<<(std::ostream &os, const Teanc &t) {
     os << "--- Teanc ---\n";
     os << "Numar carti in teanc: " << t.carti.size() << '\n';
-    for (const auto& carte : t.carti)
+    for (const auto &carte: t.carti)
         os << *carte;
     return os;
 }

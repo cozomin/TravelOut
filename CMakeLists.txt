@@ -64,6 +64,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     sources/ActiuneTrageCarti.cpp
     sources/ActiuneSchimbaCarti.cpp
     sources/ActiuneDecarteazaIntoarceAlege.cpp
+    sources/ActiuneBonus.cpp
     headers/Carte.hpp
     headers/Tara.hpp
     headers/Bilet.hpp
@@ -78,7 +79,11 @@ add_executable(${MAIN_EXECUTABLE_NAME}
     headers/ActiuneTrageCarti.hpp
     headers/ActiuneSchimbaCarti.hpp
     headers/ActiuneDecarteazaIntoarceAlege.hpp
+    headers/ActiuneBonus.hpp
     headers/Exceptii.hpp
+    headers/Colectie.hpp
+    headers/FabricaCarti.hpp
+    headers/Observator.hpp
 )
 
 target_include_directories(${MAIN_EXECUTABLE_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/headers")

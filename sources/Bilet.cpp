@@ -8,9 +8,10 @@ const std::map<TipBilet, int> Bilet::nr_aparitii_teanc = {
     {TipBilet::Avion, 2}
 };
 
-Bilet::Bilet() : Carte("Bilet", "Un bilet de calatorie", 2), tip_bilet(TipBilet::Autobuz), range(1) {}
+Bilet::Bilet() : Carte("Bilet", "Un bilet de calatorie", 2), tip_bilet(TipBilet::Autobuz), range(1) {
+}
 
-Bilet::Bilet(const std::string& t, const std::string& d, const TipBilet tip, const int p)
+Bilet::Bilet(const std::string &t, const std::string &d, const TipBilet tip, const int p)
     : Carte(t, d, p), tip_bilet(tip) {
     switch (tip_bilet) {
         case TipBilet::Autobuz:
@@ -32,7 +33,7 @@ std::unique_ptr<Carte> Bilet::clone() const {
     return std::make_unique<Bilet>(*this);
 }
 
-void Bilet::afisare(std::ostream& os) const {
+void Bilet::afisare(std::ostream &os) const {
     os << "--- Bilet ---\n";
     os << " Nume: " << titlu << " (" << puncte << "p)\n";
     os << " Descriere: " << descriere << '\n';
@@ -55,7 +56,7 @@ void Bilet::afisare(std::ostream& os) const {
     os << " Range: " << range << '\n';
 }
 
-const std::map<TipBilet, int>& Bilet::get_nr_aparitii_teanc() {
+const std::map<TipBilet, int> &Bilet::get_nr_aparitii_teanc() {
     return nr_aparitii_teanc;
 }
 

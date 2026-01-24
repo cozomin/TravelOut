@@ -7,16 +7,18 @@
 #include <vector>
 #include <algorithm>
 
-ActiuneSchimbaCarti::ActiuneSchimbaCarti(const std::string& t, const std::string& d)
-    : Actiune(t, d, 0) {}
+ActiuneSchimbaCarti::ActiuneSchimbaCarti(const std::string &t, const std::string &d)
+    : Actiune(t, d, 0) {
+}
 
-void ActiuneSchimbaCarti::executa(Jucator &jucator, Teanc &teancPrincipal, Teanc &cartiIntoarse, Teanc &teancDecartare) const {
+void ActiuneSchimbaCarti::executa(Jucator &jucator, Teanc &teancPrincipal, Teanc &cartiIntoarse,
+                                  Teanc &teancDecartare) const {
     std::cout << "[Actiune] " << jucator.getNume() << " joaca Schimba Carti.\n";
 
     int numarCarti = 0;
     std::vector<int> indexiDeSters;
 
-    if (dynamic_cast<JucatorRobot*>(&jucator)) {
+    if (dynamic_cast<JucatorRobot *>(&jucator)) {
         if (jucator.getNrCartiMana() > 0) {
             numarCarti = 1;
             indexiDeSters.push_back(0);
@@ -25,17 +27,16 @@ void ActiuneSchimbaCarti::executa(Jucator &jucator, Teanc &teancPrincipal, Teanc
             std::cout << "[Info] Jucatorul robot nu are carti de schimbat.\n";
             return;
         }
-    }
-    else {
+    } else {
         while (true) {
             std::cout << "Cate carti vrei sa schimbi? (0 pentru a anula): ";
             std::cin >> numarCarti;
-            if (std::cin.fail() || numarCarti < 0 || static_cast<unsigned long long>(numarCarti) > jucator.getNrCartiMana()) {
+            if (std::cin.fail() || numarCarti < 0 || static_cast<unsigned long long>(numarCarti) > jucator.
+                getNrCartiMana()) {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "[Eroare] Numar invalid. Trebuie sa fie intre 0 si " << jucator.getNrCartiMana() << ".\n";
-            }
-            else {
+            } else {
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 break;
             }
@@ -54,13 +55,13 @@ void ActiuneSchimbaCarti::executa(Jucator &jucator, Teanc &teancPrincipal, Teanc
             while (true) {
                 std::cout << "> Alege cartea #" << i + 1 << " (1-" << jucator.getNrCartiMana() << "): ";
                 std::cin >> indexCarte;
-                if (std::cin.fail() || indexCarte < 1 || static_cast<unsigned long long>(indexCarte) > jucator.getNrCartiMana() ||
+                if (std::cin.fail() || indexCarte < 1 || static_cast<unsigned long long>(indexCarte) > jucator.
+                    getNrCartiMana() ||
                     std::find(indexiDeSters.begin(), indexiDeSters.end(), indexCarte - 1) != indexiDeSters.end()) {
                     std::cin.clear();
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                     std::cout << "[Eroare] Selectie invalida sau duplicata. Incearca din nou.\n";
-                }
-                else {
+                } else {
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                     indexiDeSters.push_back(indexCarte - 1);
                     break;
@@ -71,7 +72,7 @@ void ActiuneSchimbaCarti::executa(Jucator &jucator, Teanc &teancPrincipal, Teanc
 
     std::sort(indexiDeSters.rbegin(), indexiDeSters.rend());
 
-    for (int index : indexiDeSters) {
+    for (int index: indexiDeSters) {
         auto carte = jucator.scoateCarte(index);
         if (carte) {
             std::cout << "[Info] Ai decartat: " << carte->getTitlu() << '\n';
@@ -83,11 +84,9 @@ void ActiuneSchimbaCarti::executa(Jucator &jucator, Teanc &teancPrincipal, Teanc
     for (int i = 0; i < numarCarti; ++i) {
         if (teancPrincipal.getNrCarti() > 0) {
             jucator.trageCarteMana(teancPrincipal);
-        }
-        else if (cartiIntoarse.getNrCarti() > 0) {
+        } else if (cartiIntoarse.getNrCarti() > 0) {
             jucator.trageCarteMana(cartiIntoarse);
-        }
-        else {
+        } else {
             std::cout << "[Info] Nu mai sunt carti de tras.\n";
             break;
         }

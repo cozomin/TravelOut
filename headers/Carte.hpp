@@ -4,27 +4,34 @@
 #include <iostream>
 #include <memory>
 
+/**
+ * Abstract base class representing a generic card.
+ */
 class Carte {
-
 protected:
-    std:: string titlu;
-    std:: string descriere;
+    std::string titlu;
+    std::string descriere;
     int puncte;
 
 public:
-    explicit Carte(const std::string& t = "Necunoscut", const std::string& d = "", int p = 0)
-    : titlu(t), descriere(d), puncte(p) {}
+    explicit Carte(const std::string &t = "Necunoscut", const std::string &d = "", int p = 0)
+        : titlu(t), descriere(d), puncte(p) {
+    }
 
     virtual ~Carte() = default;
 
-    virtual void afisare(std::ostream& os) const ;
+    virtual void afisare(std::ostream &os) const;
 
+    /**
+     * Creates a deep copy of the card.
+     */
     virtual std::unique_ptr<Carte> clone() const = 0;
 
-    const std::string& getTitlu() const;
+    const std::string &getTitlu() const;
+
     int getPuncte() const;
 
-    friend std::ostream& operator<<(std::ostream& os, const Carte & c);
+    friend std::ostream &operator<<(std::ostream &os, const Carte &c);
 };
 
 

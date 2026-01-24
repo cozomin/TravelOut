@@ -5,17 +5,17 @@
 #include <queue>
 
 int Graf::noduri;
-std::map<std::string, std::list<std::string>> Graf::lista_adiacenta;
+std::map<std::string, std::list<std::string> > Graf::lista_adiacenta;
 
 int Graf::getNoduri() {
     return noduri;
 }
 
-const std::map<std::string, std::list<std::string>>& Graf::getListaAdiacenta() {
+const std::map<std::string, std::list<std::string> > &Graf::getListaAdiacenta() {
     return lista_adiacenta;
 }
 
-int Graf::getNrVecini(const std::string& cod) {
+int Graf::getNrVecini(const std::string &cod) {
     return lista_adiacenta[cod].size();
 }
 
@@ -29,7 +29,7 @@ int Graf::getNrVecini(const std::string& cod) {
 //     lista_adiacenta[x].push_back(y);
 // }
 
-bool Graf::compare(const std::string& first, const std::string& second) {
+bool Graf::compare(const std::string &first, const std::string &second) {
     unsigned int i = 0;
     while ((i < first.length()) && (i < second.length())) {
         if (std::tolower(first[i]) < std::tolower(second[i])) return true;
@@ -39,7 +39,7 @@ bool Graf::compare(const std::string& first, const std::string& second) {
     return (first.length() < second.length());
 }
 
-Graf::Graf(const std::string& numeFisier) {
+Graf::Graf(const std::string &numeFisier) {
     std::ifstream fin(numeFisier);
     noduri = 0;
     if (!fin.is_open()) {
@@ -79,22 +79,22 @@ Graf::Graf(const std::string& numeFisier) {
         }
         noduri++;
     }
-    for (auto& pair : lista_adiacenta) {
+    for (auto &pair: lista_adiacenta) {
         pair.second.sort(compare);
     }
 }
 
-std::ostream& operator<<(std::ostream& os, const Graf& g) {
-    for (const auto& m : g.getListaAdiacenta()) {
+std::ostream &operator<<(std::ostream &os, const Graf &g) {
+    for (const auto &m: g.getListaAdiacenta()) {
         os << m.first << ": ";
-        for (const auto& l : m.second)
+        for (const auto &l: m.second)
             os << l << ' ';
         os << '\n';
     }
     return os;
 }
 
-int Graf::distantaTari(const std::string& startNode, const std::string& endNode) {
+int Graf::distantaTari(const std::string &startNode, const std::string &endNode) {
     std::queue<std::string> q;
     std::map<std::string, int> distances;
 
@@ -124,7 +124,7 @@ int Graf::distantaTari(const std::string& startNode, const std::string& endNode)
 
         auto it = lista_adiacenta.find(currentNode);
         if (it != lista_adiacenta.end()) {
-            for (const std::string& neighbor : it->second) {
+            for (const std::string &neighbor: it->second) {
                 if (!distances.contains(neighbor)) {
                     distances[neighbor] = currentDistance + 1;
                     q.push(neighbor);

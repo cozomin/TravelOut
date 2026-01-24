@@ -5,18 +5,20 @@
 #include "Teanc.hpp"
 #include <ostream>
 
+/**
+ * Action card that allows drawing cards and gaining extra actions.
+ */
 class ActiuneTrageCarti : public Actiune {
 private:
     int numarCarti;
     int bonusActiuni;
 
 public:
-
     ActiuneTrageCarti(const std::string &t, int nrCarti, int bonusActiuni);
 
     void executa(Jucator &jucator, Teanc &teancPrincipal, Teanc &cartiIntoarse, Teanc &teancDecartare) const override;
+
     std::unique_ptr<Carte> clone() const override;
 };
 
 #endif //ACTIUNE_TRAGE_CARTI_HPP
-

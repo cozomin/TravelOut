@@ -5,11 +5,12 @@
 #include <algorithm>
 #include <utility>
 
-Jucator::Jucator(const std::string& n) : nume(n), poate_calatorii(true) {}
+Jucator::Jucator(const std::string &n) : nume(n), poate_calatorii(true) {
+}
 
 bool Jucator::primaTura() {
-    const auto it = std::find_if(cartiMana.begin(), cartiMana.end(), [](const auto& carte) {
-        return dynamic_cast<Tara*>(carte.get()) != nullptr;
+    const auto it = std::find_if(cartiMana.begin(), cartiMana.end(), [](const auto &carte) {
+        return dynamic_cast<Tara *>(carte.get()) != nullptr;
     });
 
     if (it == cartiMana.end()) {
@@ -26,20 +27,20 @@ void Jucator::incepeTura() {
     std::cout << "==> Incepe tura lui " << nume << " (actiuni: " << actiuni << ")\n";
 }
 
-void Jucator::trageCarteMana(Teanc& teanc) {
+void Jucator::trageCarteMana(Teanc &teanc) {
     try {
         auto carteNoua = teanc.trageCarte();
         cartiMana.push_back(std::move(carteNoua));
-    } catch (const PachetGolExceptie& e) {
+    } catch (const PachetGolExceptie &e) {
         std::cerr << " [Trage Carte] " << nume << ": " << e.what() << '\n';
-        throw; 
-    } catch (const ActiuneInvalidaExceptie& e) {
+        throw;
+    } catch (const ActiuneInvalidaExceptie &e) {
         std::cerr << " [Trage Carte] " << nume << ": " << e.what() << '\n';
         throw;
     }
 }
 
-void Jucator::incheieTura(Teanc& teancDecartare) {
+void Jucator::incheieTura(Teanc &teancDecartare) {
     std::cout << "==> Tura lui " << nume << " s-a incheiat.\n";
 
     if (!cartiMana.empty()) {
@@ -66,7 +67,7 @@ void Jucator::swap(const unsigned long long index, std::unique_ptr<Carte> carte)
     cartiMana[index] = std::move(carte);
 }
 
-const std::string& Jucator::getNume() const {
+const std::string &Jucator::getNume() const {
     return nume;
 }
 
@@ -82,7 +83,7 @@ unsigned long long Jucator::getNrCartiMana() const {
     return cartiMana.size();
 }
 
-Carte* Jucator::getCarte(const unsigned long long index) const {
+Carte *Jucator::getCarte(const unsigned long long index) const {
     if (index >= cartiMana.size()) {
         throw ActiuneInvalidaExceptie("Index invalid pentru a obtine cartea din mana jucatorului.");
     }
@@ -107,17 +108,22 @@ void Jucator::adaugaCarte(std::unique_ptr<Carte> carte) {
 
 void Jucator::addActiuni(const int numarActiuni) {
     actiuni += numarActiuni;
-    std::cout << " [Actiuni] " << nume << " a primit " << numarActiuni << " actiuni. Total actiuni: " << actiuni << '\n';
+    std::cout << " [Actiuni] " << nume << " a primit " << numarActiuni << " actiuni. Total actiuni: " << actiuni <<
+            '\n';
+}
+
+int Jucator::getActiuni() const {
+    return actiuni;
 }
 
 bool Jucator::esteTaraIndex(const unsigned long long index) const {
     if (index < 1 || static_cast<size_t>(index) > cartiMana.size()) {
         throw ActiuneInvalidaExceptie("Index invalid pentru verificarea tipului de carte in mana jucatorului.");
     }
-    return dynamic_cast<Tara*>(cartiMana[index - 1].get()) != nullptr;
+    return dynamic_cast<Tara *>(cartiMana[index - 1].get()) != nullptr;
 }
 
-void Jucator::afisare(std::ostream& os) const {
+void Jucator::afisare(std::ostream &os) const {
     os << "--- Jucator: " << nume << " ---\n";
     os << "Actiuni ramase: " << actiuni << '\n';
     os << "Carti in mana (" << cartiMana.size() << "):\n";
@@ -125,13 +131,13 @@ void Jucator::afisare(std::ostream& os) const {
         os << "  (Nicio carte in mana)\n";
 
     int index = 1;
-    for (const auto& carte : cartiMana)
+    for (const auto &carte: cartiMana)
         os << " - " << "[" << index++ << "] " << *carte << '\n';
 
     os << etalare << '\n';
 }
 
-std::ostream& operator<<(std::ostream& os, const Jucator& j) {
+std::ostream &operator<<(std::ostream &os, const Jucator &j) {
     j.afisare(os);
     return os;
 }

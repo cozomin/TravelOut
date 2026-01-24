@@ -4,32 +4,44 @@
 #include <stdexcept>
 #include <string>
 
-
+/**
+ * Base exception class for game-related errors.
+ */
 class JocExceptie : public std::runtime_error {
 public:
-    explicit JocExceptie(const std::string& mesaj)
-        : std::runtime_error("Eroare Joc: " + mesaj) {}
+    explicit JocExceptie(const std::string &mesaj)
+        : std::runtime_error("Eroare Joc: " + mesaj) {
+    }
 };
 
-
+/**
+ * Exception thrown when a deck is empty.
+ */
 class PachetGolExceptie : public JocExceptie {
 public:
-    explicit PachetGolExceptie(const std::string& mesaj = "Pachetul de carti este gol.")
-        : JocExceptie("Pachet gol - " + mesaj) {}
+    explicit PachetGolExceptie(const std::string &mesaj = "Pachetul de carti este gol.")
+        : JocExceptie("Pachet gol - " + mesaj) {
+    }
 };
 
-
+/**
+ * Exception thrown when an invalid action is attempted.
+ */
 class ActiuneInvalidaExceptie : public JocExceptie {
 public:
-    explicit ActiuneInvalidaExceptie(const std::string& mesaj = "Actiune invalida.")
-        : JocExceptie("Actiune invalida - " + mesaj) {}
+    explicit ActiuneInvalidaExceptie(const std::string &mesaj = "Actiune invalida.")
+        : JocExceptie("Actiune invalida - " + mesaj) {
+    }
 };
 
-
+/**
+ * Exception thrown during game initialization errors.
+ */
 class InitializareJocExceptie : public JocExceptie {
 public:
-    explicit InitializareJocExceptie(const std::string& mesaj = "Eroare la initializarea jocului.")
-        : JocExceptie("Initializare joc - " + mesaj) {}
+    explicit InitializareJocExceptie(const std::string &mesaj = "Eroare la initializarea jocului.")
+        : JocExceptie("Initializare joc - " + mesaj) {
+    }
 };
 
 #endif // EXCEPTII_HPP

@@ -10,8 +10,5 @@ std::ostream &operator<<(std::ostream &os, const Carte &c) {
     return os;
 }
 
-const std::string&  Carte::getTitlu() const { return titlu;}
-int Carte::getPuncte() const { return puncte;}
-
-
-
+const std::string &Carte::getTitlu() const { return titlu; }
+int Carte::getPuncte() const { return puncte; }

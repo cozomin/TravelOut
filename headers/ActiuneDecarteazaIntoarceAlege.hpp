@@ -5,12 +5,15 @@
 #include <string>
 #include <memory>
 
+/**
+ * Complex action card: Discard, Reveal, Choose.
+ */
 class ActiuneDecarteazaIntoarceAlege : public Actiune {
 public:
-
     ActiuneDecarteazaIntoarceAlege(const std::string &t, const std::string &d, int p);
 
     void executa(Jucator &jucator, Teanc &teancPrincipal, Teanc &cartiIntoarse, Teanc &teancDecartare) const override;
+
     std::unique_ptr<Carte> clone() const override;
 };
 

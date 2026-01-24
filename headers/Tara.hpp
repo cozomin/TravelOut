@@ -5,6 +5,10 @@
 #include <string>
 #include <memory>
 
+/**
+ * Class representing a Country card.
+ * Inherits from Carte.
+ */
 class Tara : public Carte {
 private:
     bool detinuta;
@@ -12,13 +16,14 @@ private:
 
 public:
     Tara();
-    Tara(const std::string& t, const std::string& d, int p, const std::string&);
+
+    Tara(const std::string &t, const std::string &d, int p, const std::string &);
 
     std::unique_ptr<Carte> clone() const override;
 
-    void afisare(std::ostream& os) const override;
+    void afisare(std::ostream &os) const override;
 
-    const std::string& getCod() const;
+    const std::string &getCod() const;
 
     void setDetinuta(bool d);
 };
