@@ -42,7 +42,7 @@ void Teanc::populeazaTariFisier(const std::string &numeFisier) {
 
         const int puncte = std::stoi(puncteStr);
 
-        // Use Factory
+        // Factory
         carti.adauga(FabricaCarti::creazaTara(nume, descriere, puncte, cod));
     }
 
@@ -72,13 +72,13 @@ void Teanc::populeazaTeanc() {
                 break;
         }
         for (int i = 0; i < numar; i++) {
-            // Use Factory
+            // Factory
             carti.adauga(FabricaCarti::creazaBilet(nume, desc, tip));
         }
     }
 
     for (int i = 0; i < nr_aparitii_actiune; i++) {
-        // Use Factory
+        // Factory
         carti.adauga(FabricaCarti::creazaActiuneTrageCarti("ATM", 3, 0));
         carti.adauga(FabricaCarti::creazaActiuneTrageCarti("Viata de hostel", 2, 1));
         carti.adauga(FabricaCarti::creazaActiuneSchimbaCarti("O noua viata",

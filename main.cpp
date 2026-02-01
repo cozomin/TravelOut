@@ -12,7 +12,7 @@ int main() {
 
         Joc joc(numeJucatori, 8, 3, 3, 2, 0);
 
-        // Add Observer
+        // Observer
         auto logger = std::make_shared<LoggerJoc>();
         joc.adaugaObservator(logger);
 
