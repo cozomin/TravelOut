@@ -1,142 +1,92 @@
 # TravelOut
-TravelOut este un joc strategic cu cărți pentru 2 jucători, în care călătorești prin Europa cu autobuzul, trenul sau avionul pentru a obține cele mai multe puncte. Jucătorii folosesc cărți pentru a se deplasa între țări, pentru a colecta puncte și de acțiune, care îi ajută pe ei sau le pun piedici adversarilor. Jocul se încheie atunci când un jucător a vizitat cinci țări, moment în care jucătorul cu cel mai mare număr de puncte câștigă.
 
-### Folosiți template-ul corespunzător grupei voastre!
+TravelOut is a strategic card game for 2 players, in which you travel across Europe by bus, train, or plane to score the most points. Players use cards to move between countries, collect points, and play action cards that either help themselves or hinder their opponent. The game ends when a player has visited five countries, at which point the player with the highest score wins.
 
-| Laborant  | Link template                                |
-|-----------|----------------------------------------------|
-| Dragoș B  | https://github.com/Ionnier/oop-template      |
-| Tiberiu M | https://github.com/MaximTiberiu/oop-template |
-| Marius MC | https://github.com/mcmarius/oop-template     |
+---
 
-### Important!
+## 1. Technologies and Tools
 
-Aveți voie cu cod generat de modele de limbaj la care nu ați contribuit semnificativ doar dacă documentați riguros acest proces.
-Codul generat pus "ca să fie"/pe care nu îl înțelegeți se punctează doar pentru puncte bonus, doar în contextul
-în care oferă funcționalități ajutătoare și doar dacă are sens.
+* **Language:** C++ (C++17 / C++20 standard) - extensive use of OOP paradigms (encapsulation, inheritance, polymorphism, abstraction), templates, and the Standard Template Library (STL).
+* **Build System:** CMake - cross-platform build orchestration, compiler flag management, and project setup.
+* **Static Analysis & Code Quality:**
+  * **Clang-Tidy:** Enforces style guidelines and modern C++ best practices.
+  * **Cppcheck:** Performs static code analysis to catch syntax issues, undefined behavior, and potential bugs.
+* **Memory Safety & Runtime Debugging:**
+  * **Valgrind & Sanitizers (ASan, UBSan):** Employed via automated scripts to detect memory leaks and invalid accesses.
+* **CI/CD & Automation:**
+  * **GitHub Actions:** Workflows automating CMake configuration, compilation, static checks, runtime sanitizers, and artifact generation.
+  * **Renovate:** Automated dependency and CI action updates.
 
-Codul din proiect trebuie să poată fi ușor de înțeles și de modificat de către altcineva. Pentru detalii, veniți la ore.
+---
 
-O cerință nu se consideră îndeplinită dacă este realizată doar prin cod generat.
+## 2. Gameplay & Functionality
 
-- **Fără cod de umplutură/fără sens!**
-- **Fără copy-paste!**
-- **Fără variabile globale!**
-- **Fără atribute publice!**
-- **Pentru T2 și T3, fără date în cod!** Datele vor fi citite din fișier, aveți exemple destule.
-- **Obligatoriu** fișiere cu date mai multe din care să citiți, obligatoriu cu biblioteci externe: fișiere (local sau server) sau baze de date
-- obligatoriu (TBD) să integrați cel puțin două biblioteci externe pe lângă cele pentru stocare
+The game simulates a strategic board game inspired by Travelin', where players build paths between countries using cards and travel tickets:
 
-### Tema 0
+* **Board and Country Network:**
+  * The map is modeled as an undirected graph, populated with country data and adjacencies loaded from external files (`Tari.txt` and `GrafTari.txt`).
+  * Route validation and ticket goal verification are handled through graph traversal algorithms.
+* **Player Types:**
+  * **Human Player (`JucatorUman`):** Takes input from the console/keyboard to make turn choices.
+  * **Bot Player (`JucatorRobot`):** An AI opponent implementing decision heuristics to automatically evaluate and execute moves.
+* **Cards & Resource Management:**
+  * **Card Decks (`Teanc`):** Manages draw and discard piles with automatic reshuffling when exhausted.
+  * **Card Display (`Etalare`):** A face-up open market where players can pick available cards.
+  * **Tickets (`Bilet`):** Secret objective cards assigning bonus points for connecting pairs of countries.
+* **Polymorphic Action Execution:**
+  * Drawing cards from either the deck or the open display (`ActiuneTrageCarti`).
+  * Exchanging cards or claiming route connections (`ActiuneSchimbaCarti`).
+  * Discarding, flipping, and selecting specific cards (`ActiuneDecarteazaIntoarceAlege`).
+  * Applying special bonus actions and effects (`ActiuneBonus`).
+* **Robust Error Handling:**
+  * Custom exception classes (`Exceptii.hpp`) handle runtime validation for invalid moves, unauthorized actions, and data-loading issues.
 
-- [ ] Nume proiect (poate fi schimbat ulterior)
-- [ ] Scurtă descriere a temei alese, ce v-ați propus să implementați
+---
 
-## Tema 1
+## 3. Architecture & Design Patterns
 
-#### Cerințe
-- [ ] definirea a minim **3-4 clase** folosind compunere cu clasele definite de voi; moștenirile nu se iau în considerare aici
-- [ ] constructori de inițializare cu parametri pentru fiecare clasă
-- [ ] pentru o aceeași (singură) clasă: constructor de copiere, `operator=` de copiere, destructor
-<!-- - [ ] pentru o altă clasă: constructor de mutare, `operator=` de mutare, destructor -->
-<!-- - [ ] pentru o altă clasă: toate cele 5 funcții membru speciale -->
-- [ ] `operator<<` pentru **toate** clasele pentru afișare (`std::ostream`) folosind compunere de apeluri cu `operator<<`
-- [ ] cât mai multe `const` (unde este cazul) și funcții `private`
-- [ ] implementarea a minim 3 funcții membru publice pentru funcționalități netriviale specifice temei alese, dintre care cel puțin 1-2 funcții mai complexe
-  - nu doar citiri/afișări sau adăugat/șters elemente într-un/dintr-un vector
-- [ ] scenariu de utilizare **cu sens** a claselor definite:
-  - crearea de obiecte și apelarea tuturor funcțiilor membru publice în main
-  - vor fi adăugate în fișierul `tastatura.txt` DOAR exemple de date de intrare de la tastatură (dacă există); dacă aveți nevoie de date din fișiere, creați alte fișiere separat
-- [ ] minim 50-55% din codul propriu să fie C++, `.gitattributes` configurat corect
-- [ ] tag de `git`: de exemplu `v0.1`
-- [ ] serviciu de integrare continuă (CI) cu **toate bifele**; exemplu: GitHub Actions
-- [ ] code review #1 2 proiecte
+The codebase is structured around SOLID design principles to keep core components loosely coupled and easily extensible:
 
-## Tema 2
+### 3.1. Factory Method Pattern
+* **Component:** `FabricaCarti
+* **Purpose:** Decouples card instantiation from the core game loop, centralizing the creation logic for different card types and allowing new card variations to be added cleanly.
 
-#### Cerințe
-- [ ] separarea codului din clase în `.h` (sau `.hpp`) și `.cpp`
-- [ ] moșteniri:
-  - minim o clasă de bază și **3 clase derivate** din aceeași ierarhie
-  - ierarhia trebuie să fie cu bază proprie, nu derivată dintr-o clasă predefinită
-  - [ ] funcții virtuale (pure) apelate prin pointeri de bază din clasa care conține atributul de tip pointer de bază
-    - minim o funcție virtuală va fi **specifică temei** (i.e. nu simple citiri/afișări sau preluate din biblioteci i.e. draw/update/render)
-    - constructori virtuali (clone): sunt necesari, dar nu se consideră funcții specifice temei
-    - afișare virtuală, interfață non-virtuală
-  - [ ] apelarea constructorului din clasa de bază din constructori din derivate
-  - [ ] clasă cu atribut de tip pointer la o clasă de bază cu derivate; aici apelați funcțiile virtuale prin pointer de bază, eventual prin interfața non-virtuală din bază
-    - [ ] suprascris cc/op= pentru copieri/atribuiri corecte, copy and swap
-    - [ ] `dynamic_cast`/`std::dynamic_pointer_cast` pentru downcast cu sens
-    - [ ] smart pointers (recomandat, opțional)
-- [ ] excepții
-  - [ ] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim **3** clase pentru erori specifice distincte
-    - clasele de excepții trebuie să trateze categorii de erori distincte (exemplu de erori echivalente: citire fișiere cu diverse extensii)
-  - [ ] utilizare cu sens: de exemplu, `throw` în constructor (sau funcție care întoarce un obiect), `try`/`catch` în `main`
-  - această ierarhie va fi complet independentă de ierarhia cu funcții virtuale
-- [ ] funcții și atribute `static`
-- [ ] STL
-- [ ] cât mai multe `const`
-- [ ] funcții *de nivel înalt*, de eliminat cât mai mulți getters/setters/funcții low-level
-- [ ] minim 75-80% din codul propriu să fie C++
-- [ ] la sfârșit: commit separat cu adăugarea unei noi clase derivate fără a modifica restul codului, **pe lângă cele 3 derivate deja adăugate** din aceeași ierarhie
-  - noua derivată nu poate fi una existentă care a fost ștearsă și adăugată din nou
-  - noua derivată va fi integrată în codul existent (adică va fi folosită, nu adăugată doar ca să fie)
-- [ ] tag de `git` pe commit cu **toate bifele**: de exemplu `v0.2`
-- [ ] code review #2 2 proiecte
+### 3.2. Command Pattern / Strategy Pattern
+* **Components:** `Actiune` (abstract base class), `ActiuneTrageCarti`, `ActiuneSchimbaCarti`, `ActiuneBonus`, `ActiuneDecarteazaIntoarceAlege.
+* **Purpose:** Encapsulates each turn action into its own polymorphic object. This standardizes move execution, simplifies pre-condition checks, and makes the game's rules easily expandable with new actions.
 
-## Tema 3
+### 3.3. Observer Pattern
+* **Component:** `Observator
+* **Purpose:** Emits notifications when board state changes occur (such as card draws, display updates, or claimed routes), separating game state mutations from presentation or output logic.
 
-#### Cerințe
-- [ ] 2 șabloane de proiectare (design patterns)
-- [ ] o clasă șablon cu sens; minim **2 instanțieri**
-  - [ ] preferabil și o funcție șablon (template) cu sens; minim 2 instanțieri
-- [ ] minim 85% din codul propriu să fie C++
-<!-- - [ ] o specializare pe funcție/clasă șablon -->
-- [ ] tag de `git` pe commit cu **toate bifele**: de exemplu `v0.3` sau `v1.0`
-- [ ] code review #3 2 proiecte
+### 3.4. Template Method / Polymorphic Specialization
+* **Components:** `Jucator` (base class), `JucatorUman`, `JucatorRobot.
+* **Purpose:** Defines the shared attributes (hand of cards, completed routes, tickets, score) and turn lifecycle within the base class, delegating decision-making (`alegeActiune`) to concrete human or bot subclasses.
 
-## Instrucțiuni de compilare
+### 3.5. Facade / Mediator
+* **Component:** `Joc
+* **Purpose:** Coordinates the game lifecycle, mediating interactions between graph nodes, player entities, decks, open displays, turn sequence, and victory conditions.
 
-Proiectul este configurat cu CMake.
+---
 
-Instrucțiuni pentru terminal:
+## 4. Building and Running
 
-1. Pasul de configurare
-```sh
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-# sau ./scripts/cmake.sh configure
-```
+### Prerequisites
+* A C++ compiler supporting C++17 or C++20 (GCC >= 10, Clang >= 11, or MSVC).
+* CMake (version 3.16 or newer).
 
-Sau pe Windows cu GCC folosind Git Bash:
-```sh
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -G Ninja
-# sau ./scripts/cmake.sh configure -g Ninja
-```
+### Build Instructions
 
-La acest pas putem cere să generăm fișiere de proiect pentru diverse medii de lucru.
+```bash
+# 1. Create and navigate to the build directory
+mkdir build && cd build
 
+# 2. Generate build files
+cmake ..
 
-2. Pasul de compilare
-```sh
-cmake --build build --config Debug --parallel 6
-# sau ./scripts/cmake.sh build
-```
+# 3. Compile the target
+cmake --build .
 
-Cu opțiunea `parallel` specificăm numărul de fișiere compilate în paralel.
-
-
-3. Pasul de instalare (opțional)
-```sh
-cmake --install build --config Debug --prefix install_dir
-# sau ./scripts/cmake.sh install
-```
-
-Vezi și [`scripts/cmake.sh`](scripts/cmake.sh).
-
-Observație: folderele `build/` și `install_dir/` sunt adăugate în fișierul `.gitignore` deoarece
-conțin fișiere generate și nu ne ajută să le versionăm.
-
-
-## Resurse
-
-- adăugați trimiteri **detaliate** către resursele externe care v-au ajutat sau pe care le-ați folosit
+# 4. Run the executable
+./oop
+````
